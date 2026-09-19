@@ -1,0 +1,60 @@
+{
+  "$ref": "#/definitions/plans",
+  "definitions": {
+    "plans": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 2
+        },
+        "price": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "priceLabel": {
+          "type": "string",
+          "minLength": 2
+        },
+        "description": {
+          "type": "string",
+          "minLength": 10
+        },
+        "features": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "cta": {
+          "type": "string",
+          "minLength": 2
+        },
+        "highlighted": {
+          "type": "boolean",
+          "default": false
+        },
+        "badge": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "price",
+        "priceLabel",
+        "description",
+        "features",
+        "cta"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

@@ -1,0 +1,99 @@
+---
+const links = [
+  { href: '/', label: 'Inicio' },
+  { href: '/directorio', label: 'Directorio' },
+  { href: '/planes', label: 'Planes' },
+  { href: '/publicar', label: 'Publicar' },
+  { href: '/contacto', label: 'Contacto' },
+];
+const pathname = Astro.url.pathname;
+---
+
+<header class="sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-ink-100">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+    <div class="flex items-center justify-between h-16">
+      <a href="/" class="flex items-center gap-2.5" aria-label="Clasificados Las Flores - inicio">
+        <span
+          class="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-600 to-indigo-600 text-white grid place-items-center font-display font-bold text-lg"
+          aria-hidden="true">LF</span
+        >
+        <span class="leading-tight">
+          <span class="block font-display font-bold text-[15px]">Clasificados Las Flores</span>
+          <span class="block text-xs text-slate-500">Directorio local · Bs. As.</span>
+        </span>
+      </a>
+
+      <nav class="hidden md:flex items-center gap-1" aria-label="Navegación principal">
+        {
+          links.map((l) => (
+            <a
+              href={l.href}
+              aria-current={pathname === l.href ? 'page' : undefined}
+              class:list={[
+                'px-3.5 py-2 rounded-full text-sm font-medium transition-colors',
+                pathname === l.href
+                  ? 'bg-ink-900 text-white'
+                  : 'text-slate-600 hover:text-ink-900 hover:bg-ink-100',
+              ]}>
+              {l.label}
+            </a>
+          ))
+        }
+      </nav>
+
+      <div class="hidden md:flex items-center gap-2">
+        <a
+          href="/publicar"
+          class="px-4 py-2.5 rounded-full bg-brand-600 text-white text-sm font-semibold hover:bg-brand-700 transition-colors shadow-sm">
+          Publicar gratis
+        </a>
+      </div>
+
+      <details class="md:hidden relative" id="menu-movil">
+        <summary
+          class="list-none cursor-pointer px-3 py-2 rounded-lg border border-ink-200 text-sm font-semibold"
+          aria-label="Abrir menú"
+          aria-expanded="false">
+          ☰ Menú
+        </summary>
+        <nav
+          class="absolute right-0 mt-2 w-52 bg-white rounded-2xl shadow-xl border border-ink-100 p-2 flex flex-col"
+          aria-label="Navegación móvil">
+          {
+            links.map((l) => (
+              <a
+                href={l.href}
+                aria-current={pathname === l.href ? 'page' : undefined}
+                class="px-4 py-2.5 rounded-xl text-sm font-medium hover:bg-ink-100">
+                {l.label}
+              </a>
+            ))
+          }
+          <a
+            href="/publicar"
+            class="mt-1 px-4 py-2.5 rounded-xl bg-brand-600 text-white text-sm font-semibold text-center">
+            Publicar gratis
+          </a>
+        </nav>
+      </details>
+    </div>
+  </div>
+  <script>
+    const details = document.getElementById('menu-movil') as HTMLDetailsElement | null;
+    const summary = details?.querySelector('summary');
+    const sync = () => summary?.setAttribute('aria-expanded', String(Boolean(details?.open)));
+    summary?.addEventListener('click', () => requestAnimationFrame(sync));
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        details?.removeAttribute('open');
+        sync();
+      }
+    });
+    document.addEventListener('click', (e) => {
+      if (details?.open && !details.contains(e.target as Node)) {
+        details.removeAttribute('open');
+        sync();
+      }
+    });
+  </script>
+</header>

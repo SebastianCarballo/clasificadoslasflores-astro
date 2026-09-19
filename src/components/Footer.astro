@@ -1,0 +1,88 @@
+---
+import { listCategories } from '@/data/categories';
+
+// URL del estudio creador — actualizar si cambia el dominio oficial.
+const STUDIO_URL = 'https://membystudio.com';
+
+const categories = await listCategories();
+---
+
+<footer class="bg-ink-950 text-slate-300 mt-16">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-14 grid gap-10 md:grid-cols-4">
+    <div>
+      <div class="flex items-center gap-2.5 mb-4">
+        <span
+          class="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-500 to-indigo-500 text-white grid place-items-center font-display font-bold"
+          aria-hidden="true">LF</span
+        >
+        <span class="font-display font-bold text-white">Clasificados Las Flores</span>
+      </div>
+      <p class="text-sm leading-relaxed text-slate-400">
+        El portal digital de Las Flores, Buenos Aires. Conectamos vecinos con comercios,
+        oficios y emprendedores locales.
+      </p>
+      <p class="mt-4 text-xs text-slate-400">Hecho con ♥ en Las Flores · Carga &lt; 1s en 4G</p>
+      <a
+        href={STUDIO_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="mt-4 flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-3 hover:bg-white/10 hover:border-white/20 transition-colors"
+        aria-label="MembyStudio — estudio creador del sitio web">
+        <span
+          class="w-9 h-9 shrink-0 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 text-ink-950 grid place-items-center font-display font-bold text-sm"
+          aria-hidden="true">M</span
+        >
+        <span class="leading-tight">
+          <span class="block text-xs text-slate-400">Sitio web creado por</span>
+          <span class="block text-sm font-bold text-white">MembyStudio</span>
+        </span>
+      </a>
+    </div>
+
+    <nav aria-label="Categorías">
+      <h3 class="text-white font-semibold text-sm uppercase tracking-wider mb-4">Categorías</h3>
+      <ul class="space-y-2 text-sm">
+        {
+          categories.slice(0, 6).map((c) => (
+            <li>
+              <a href={`/categoria/${c.slug}`} class="hover:text-white transition-colors">
+                {c.name}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <nav aria-label="Empresa">
+      <h3 class="text-white font-semibold text-sm uppercase tracking-wider mb-4">Plataforma</h3>
+      <ul class="space-y-2 text-sm">
+        <li><a href="/directorio" class="hover:text-white">Directorio</a></li>
+        <li><a href="/planes" class="hover:text-white">Planes y precios</a></li>
+        <li><a href="/publicar" class="hover:text-white">Publicar mi negocio</a></li>
+        <li><a href="/nosotros" class="hover:text-white">Nosotros</a></li>
+        <li><a href="/contacto" class="hover:text-white">Contacto</a></li>
+      </ul>
+    </nav>
+
+    <div>
+      <h3 class="text-white font-semibold text-sm uppercase tracking-wider mb-4">Contacto</h3>
+      <ul class="space-y-2 text-sm text-slate-400">
+        <li>📍 Las Flores, Buenos Aires</li>
+        <li>📱 WhatsApp: +54 9 2224 00-0000</li>
+        <li>✉️ hola@clasificadoslasflores.com.ar</li>
+      </ul>
+      <div class="flex gap-2 mt-4">
+        <a href="https://instagram.com/clasificadoslasflores" target="_blank" rel="noopener noreferrer" aria-label="Instagram de Clasificados Las Flores" class="w-9 h-9 rounded-full bg-white/10 grid place-items-center hover:bg-white/20"><span aria-hidden="true">📸</span></a>
+        <a href="https://facebook.com/clasificadoslasflores" target="_blank" rel="noopener noreferrer" aria-label="Facebook de Clasificados Las Flores" class="w-9 h-9 rounded-full bg-white/10 grid place-items-center hover:bg-white/20"><span aria-hidden="true">📘</span></a>
+        <a href="https://wa.me/5492224000000" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp de Clasificados Las Flores" class="w-9 h-9 rounded-full bg-white/10 grid place-items-center hover:bg-white/20"><span aria-hidden="true">💬</span></a>
+      </div>
+    </div>
+  </div>
+  <div class="border-t border-white/10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-5 flex flex-col sm:flex-row justify-between gap-2 text-xs text-slate-400">
+      <p>© 2026 Clasificados Las Flores by <a href={STUDIO_URL} target="_blank" rel="noopener noreferrer" class="text-slate-300 font-semibold hover:text-white transition-colors">MembyStudio</a>. Todos los derechos reservados.</p>
+      <p>SEO local · Datos estructurados Schema.org · Mobile-first</p>
+    </div>
+  </div>
+</footer>

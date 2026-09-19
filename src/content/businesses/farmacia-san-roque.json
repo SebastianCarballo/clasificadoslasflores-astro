@@ -1,0 +1,22 @@
+{
+  "name": "Farmacia San Roque",
+  "category": "salud",
+  "description": "Farmacia de turno, perfumería y dermocosmética. Envíos a domicilio sin cargo en la ciudad. Obras sociales y PAMI.",
+  "shortDescription": "Farmacia de turno con envíos sin cargo.",
+  "address": "San Martín 600, Las Flores",
+  "phone": "5492224425678",
+  "whatsapp": "5492224425678",
+  "hasWhatsAppButton": true,
+  "hours": "Todos los días 8–22hs",
+  "image": "https://images.unsplash.com/photo-1587854692152-cbe660dbde88?w=800&q=80&auto=format&fit=crop",
+  "gallery": [
+    "https://images.unsplash.com/photo-1587854692152-cbe660dbde88?w=800&q=80&auto=format&fit=crop"
+  ],
+  "verified": true,
+  "featured": false,
+  "plan": "plata",
+  "rating": 4.7,
+  "reviewsCount": 89,
+  "tags": ["farmacia", "turno", "envíos"],
+  "createdAt": "2026-03-15"
+}

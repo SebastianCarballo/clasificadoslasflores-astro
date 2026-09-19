@@ -1,0 +1,6 @@
+{
+  "name": "Vehículos",
+  "description": "Autos, motos, repuestos, talleres y lavaderos.",
+  "icon": "🚗",
+  "color": "from-slate-600 to-slate-900"
+}

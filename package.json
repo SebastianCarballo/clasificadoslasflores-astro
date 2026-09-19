@@ -1,0 +1,27 @@
+{
+  "name": "clasificados-las-flores",
+  "type": "module",
+  "version": "1.0.0",
+  "packageManager": "pnpm@12.4.2",
+  "description": "Directorio y portal digital local de Las Flores, Buenos Aires",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "smoke": "node scripts/smoke.mjs",
+    "verify": "astro check && node scripts/smoke.mjs"
+  },
+  "dependencies": {
+    "@fontsource-variable/inter": "^5.3.0",
+    "@fontsource-variable/sora": "^5.3.0",
+    "astro": "^5.7.0",
+    "sharp": "^0.35.4"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "@tailwindcss/vite": "^4.1.0",
+    "tailwindcss": "^4.1.0",
+    "typescript": "^5.8.0"
+  }
+}

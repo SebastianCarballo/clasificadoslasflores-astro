@@ -1,0 +1,66 @@
+---
+import '@/styles/global.css';
+import Header from '@/components/Header.astro';
+import Footer from '@/components/Footer.astro';
+import type { SeoProps } from '@/utils/site';
+import { SITE } from '@/utils/site';
+
+interface Props extends SeoProps {}
+
+const {
+  title,
+  description,
+  canonical,
+  image = SITE.defaultImage,
+  type = 'website',
+  schema,
+} = Astro.props as Props;
+
+const fullTitle = title.includes(SITE.name) ? title : `${title} | ${SITE.name}`;
+const canonicalUrl = canonical ?? `${SITE.url}${Astro.url.pathname}`;
+const imageUrl = image.startsWith('http') ? image : `${SITE.url}${image}`;
+---
+
+<!doctype html>
+<html lang="es-AR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+
+    <meta property="og:type" content={type} />
+    <meta property="og:locale" content={SITE.locale} />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={imageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={imageUrl} />
+
+    <meta name="theme-color" content="#1c72ef" />
+    <meta name="robots" content="index, follow" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    {/* Fuentes self-hosted vía fontsource (ver src/styles/global.css). Sin terceros bloqueantes. */}
+
+    {schema && <script type="application/ld+json" set:html={JSON.stringify(schema)} />}
+    <slot name="head" />
+  </head>
+  <body class="bg-ink-50 text-ink-900 antialiased min-h-screen flex flex-col">
+    <a href="#contenido" class="skip-link bg-brand-600 text-white px-4 py-2 rounded-lg font-semibold">
+      Saltar al contenido
+    </a>
+    <Header />
+    <main id="contenido" class="flex-1">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

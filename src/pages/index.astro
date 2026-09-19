@@ -1,0 +1,190 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+import CategoryGrid from '@/components/CategoryGrid.astro';
+import BusinessCard from '@/components/BusinessCard.astro';
+import PlanCard from '@/components/PlanCard.astro';
+import { listBusinesses } from '@/data/businesses';
+import { listCategories } from '@/data/categories';
+import { listPlans } from '@/data/plans';
+
+const businesses = await listBusinesses();
+const categories = await listCategories();
+const plans = await listPlans();
+
+const destacados = businesses.filter((b) => b.plan === 'oro' || b.featured).slice(0, 3);
+const recientes = [...businesses].sort((a, b) => b.createdAt.localeCompare(a.createdAt)).slice(0, 6);
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'Clasificados Las Flores',
+  url: 'https://clasificadoslasflores.com.ar',
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: 'https://clasificadoslasflores.com.ar/directorio?q={search_term_string}',
+    'query-input': 'required name=search_term_string',
+  },
+};
+---
+
+<BaseLayout
+  title="Clasificados Las Flores — Comercios, servicios y oficios locales"
+  description="El directorio digital de Las Flores, Buenos Aires. Encontrá plomeros, restaurantes, alquileres, tiendas y empleo local. Contacto directo por WhatsApp."
+  schema={schema}
+>
+  {/* HERO */}
+  <section class="relative overflow-hidden bg-ink-950 text-white">
+    <div
+      class="absolute inset-0 bg-gradient-to-br from-brand-700 via-indigo-700 to-ink-950"
+      aria-hidden="true"
+    />
+    <div class="absolute inset-0 dot-grid" aria-hidden="true" />
+    <div
+      class="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-brand-500/30 blur-3xl"
+      aria-hidden="true"
+    />
+    <div
+      class="absolute -bottom-32 -left-24 w-80 h-80 rounded-full bg-amber-500/15 blur-3xl"
+      aria-hidden="true"
+    />
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
+      <div class="max-w-3xl">
+        <p
+          class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 border border-white/15 text-xs font-semibold mb-5">
+          📍 Las Flores · Buenos Aires · Directorio verificado
+        </p>
+        <h1 class="font-display font-extrabold text-4xl sm:text-6xl leading-[1.05] tracking-tight text-balance">
+          Todo Las Flores,<br />
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 to-orange-400">
+            en un solo lugar.
+          </span>
+        </h1>
+        <p class="mt-5 text-lg text-slate-300 max-w-xl leading-relaxed">
+          Del plomero de urgencias a la carta de tu restaurante favorito. Buscá, compará y
+          contactá por WhatsApp en segundos.
+        </p>
+
+        {/* Buscador (progresivo: funciona sin JS vía GET) */}
+        <form
+          action="/directorio"
+          method="get"
+          role="search"
+          class="mt-8 bg-white rounded-2xl p-2 flex flex-col sm:flex-row gap-2 shadow-2xl max-w-2xl">
+          <label class="sr-only" for="q">Buscar comercios o servicios</label>
+          <input
+            id="q"
+            name="q"
+            type="search"
+            inputmode="search"
+            enterkeyhint="search"
+            placeholder="¿Qué buscás? Ej: plomero, pizza, alquiler…"
+            autocomplete="off"
+            class="flex-1 px-4 py-3 rounded-xl text-ink-900 outline-none placeholder:text-slate-400"
+          />
+          <button
+            type="submit"
+            class="px-6 py-3 rounded-xl bg-brand-600 font-bold text-white hover:bg-brand-700 active:scale-[0.98] transition">
+            Buscar
+          </button>
+        </form>
+
+        <div class="mt-4 flex flex-wrap gap-2 text-sm">
+          <span class="text-slate-400 py-1.5">Populares:</span>
+          {
+            ['Plomero', 'Pizza', 'Alquiler', 'Café'].map((t) => (
+              <a
+                href={`/directorio?q=${encodeURIComponent(t)}`}
+                class="px-4 py-2 rounded-full bg-white/10 border border-white/15 hover:bg-white/20 transition-colors">
+                {t}
+              </a>
+            ))
+          }
+        </div>
+      </div>
+
+      {/* Stats — números reales, sin multiplicadores */}
+      <dl class="mt-12 grid grid-cols-3 max-w-xl gap-4 text-center sm:text-left">
+        <div><dt class="text-xs uppercase tracking-wider text-slate-400">Negocios</dt><dd class="font-display font-extrabold text-2xl">{businesses.length}</dd></div>
+        <div><dt class="text-xs uppercase tracking-wider text-slate-400">Categorías</dt><dd class="font-display font-extrabold text-2xl">{categories.length}</dd></div>
+        <div><dt class="text-xs uppercase tracking-wider text-slate-400">Contacto</dt><dd class="font-display font-extrabold text-2xl">Directo</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  {/* CATEGORÍAS */}
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 pt-14">
+    <SectionHeading
+      eyebrow="Explorá"
+      title="Buscá por categoría"
+      description="Gastronomía, oficios, inmuebles, vehículos, empleo y más — todo de vecinos verificados."
+    />
+    <div class="mt-8"><CategoryGrid /></div>
+  </section>
+
+  {/* DESTACADOS ORO */}
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 pt-16">
+    <div class="flex items-end justify-between gap-4 mb-7">
+      <div>
+        <p class="text-xs font-bold uppercase tracking-[0.18em] text-amber-600 mb-2">★ Alianza Oro</p>
+        <h2 class="font-display font-bold text-3xl tracking-tight">Destacados de la semana</h2>
+      </div>
+      <a href="/directorio" class="hidden sm:inline-flex text-sm font-semibold text-brand-700 hover:underline">Ver directorio →</a>
+    </div>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      {destacados.map((b) => <BusinessCard business={b} />)}
+    </div>
+  </section>
+
+  {/* BANNER PUBLICITARIO */}
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 pt-14" aria-label="Publicidad local">
+    <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-emerald-700 to-teal-800 text-white p-8 sm:p-12">
+      <div class="max-w-xl">
+        <p class="text-xs font-bold uppercase tracking-[0.18em] text-white">Fiesta local · Espacio sponsor</p>
+        <h2 class="mt-2 font-display font-extrabold text-2xl sm:text-4xl">Tu evento o marca acá: banner rotativo</h2>
+        <p class="mt-3 text-emerald-50">Llegá a los vecinos cada semana. Contratá tu destacado de 7 o 15 días.</p>
+        <a href="/contacto" class="mt-5 inline-flex px-5 py-3 rounded-xl bg-white text-emerald-700 font-bold text-sm hover:bg-emerald-50">Quiero publicitar →</a>
+      </div>
+    </div>
+  </section>
+
+  {/* RECIENTES */}
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 pt-16">
+    <SectionHeading eyebrow="Novedades" title="Últimos agregados" description="Los perfiles más nuevos de la comunidad." />
+    <div class="mt-8 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      {recientes.map((b) => <BusinessCard business={b} />)}
+    </div>
+    <div class="text-center mt-8">
+      <a href="/directorio" class="inline-flex px-6 py-3 rounded-xl border-2 border-ink-900 font-bold text-sm hover:bg-ink-900 hover:text-white transition-colors">Explorar directorio completo</a>
+    </div>
+  </section>
+
+  {/* CÓMO FUNCIONA */}
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 pt-16">
+    <div class="rounded-3xl bg-ink-950 text-white p-8 sm:p-12 grid md:grid-cols-3 gap-8">
+      <div><p class="font-display font-extrabold text-4xl text-white/20" aria-hidden="true">01</p><h3 class="mt-2 font-display font-bold text-lg">Buscá</h3><p class="text-sm text-slate-400 mt-1">Filtrá por categoría o escribí lo que necesitás. Resultados ordenados por relevancia y plan.</p></div>
+      <div><p class="font-display font-extrabold text-4xl text-white/20" aria-hidden="true">02</p><h3 class="mt-2 font-display font-bold text-lg">Verificá</h3><p class="text-sm text-slate-400 mt-1">Priorizamos perfiles verificados para protegerte de estafas comunes en redes sociales.</p></div>
+      <div><p class="font-display font-extrabold text-4xl text-white/20" aria-hidden="true">03</p><h3 class="mt-2 font-display font-bold text-lg">Contactá</h3><p class="text-sm text-slate-400 mt-1">Un botón de WhatsApp con mensaje prediseñado. Sin fricción, directo con el comercio.</p></div>
+    </div>
+  </section>
+
+  {/* PLANES */}
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 pt-16" id="planes">
+    <SectionHeading eyebrow="Para negocios" title="Planes que hacen crecer tu visibilidad" description="Empezá gratis y escalá cuando necesites más clientes. Sin desarrollos costosos." />
+    <div class="mt-10 grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      {plans.map((p) => <PlanCard plan={p} />)}
+    </div>
+  </section>
+
+  {/* CTA FINAL */}
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 py-16">
+    <div class="rounded-3xl bg-gradient-to-br from-brand-600 to-indigo-700 text-white p-10 sm:p-14 text-center">
+      <h2 class="font-display font-extrabold text-3xl sm:text-4xl text-balance">¿Tenés un comercio en Las Flores?</h2>
+      <p class="mt-3 text-brand-100 max-w-xl mx-auto">Publicá gratis en 2 minutos y empezá a recibir consultas directas a tu WhatsApp.</p>
+      <div class="mt-6 flex flex-col sm:flex-row justify-center gap-3">
+        <a href="/publicar" class="px-7 py-3.5 rounded-xl bg-white text-brand-700 font-bold hover:bg-brand-50 active:scale-[0.98] transition">Publicar mi negocio gratis</a>
+        <a href="/planes" class="px-7 py-3.5 rounded-xl border border-white/40 font-bold hover:bg-white/10">Ver planes</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

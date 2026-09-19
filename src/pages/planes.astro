@@ -1,0 +1,44 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PlanCard from '@/components/PlanCard.astro';
+import { listPlans } from '@/data/plans';
+
+const plans = await listPlans();
+---
+
+<BaseLayout
+  title="Planes y precios para comercios"
+  description="Planes Gratis, Bronce, Plata y Oro para comercios y oficios de Las Flores. Visibilidad en Google, botón de WhatsApp y destacados."
+>
+  <section class="bg-ink-950 text-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 py-14 text-center">
+      <p class="text-xs font-bold uppercase tracking-[0.18em] text-amber-300">Suscripción mensual · Sin permanencia</p>
+      <h1 class="mt-3 font-display font-extrabold text-4xl sm:text-5xl">Un plan para cada etapa de tu negocio</h1>
+      <p class="mt-4 text-slate-300">Presencia profesional sin pagar un desarrollo web. Escalá de Gratis a Oro cuando quieras.</p>
+    </div>
+  </section>
+
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 py-12">
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      {plans.map((p) => <PlanCard plan={p} />)}
+    </div>
+
+    <div class="mt-12 grid md:grid-cols-2 gap-6">
+      <div class="bg-white rounded-3xl border border-ink-100 p-7">
+        <h2 class="font-display font-bold text-xl">Ingresos extra: destacados temporales</h2>
+        <ul class="mt-4 space-y-2 text-sm text-slate-600">
+          <li>🚀 <strong>Push 7 días:</strong> cima de tu categoría + insignia “Destacado”.</li>
+          <li>🔥 <strong>Push 15 días:</strong> incluye difusión en Instagram y Facebook.</li>
+          <li>🖼️ <strong>Banner rotativo:</strong> para eventos, instituciones y marcas regionales.</li>
+        </ul>
+        <a href="/contacto" class="mt-5 inline-flex px-5 py-3 rounded-xl bg-ink-900 text-white text-sm font-bold">Consultar impulsos</a>
+      </div>
+      <div class="bg-white rounded-3xl border border-ink-100 p-7">
+        <h2 class="font-display font-bold text-xl">Preguntas frecuentes</h2>
+        <details class="mt-3 text-sm border-t pt-3"><summary class="font-semibold cursor-pointer">¿Puedo cambiar de plan?</summary><p class="mt-1 text-slate-600">Sí, subís o bajás cuando quieras. El cambio aplica al siguiente ciclo.</p></details>
+        <details class="mt-3 text-sm border-t pt-3"><summary class="font-semibold cursor-pointer">¿Cómo consigo el badge Verificado?</summary><p class="mt-1 text-slate-600">Desde Plata verificamos identidad, dirección y redes. Tarda 24–48 hs.</p></details>
+        <details class="mt-3 text-sm border-t pt-3"><summary class="font-semibold cursor-pointer">¿Aparezco en Google?</summary><p class="mt-1 text-slate-600">Sí: usamos datos estructurados LocalBusiness y SEO local por ficha.</p></details>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

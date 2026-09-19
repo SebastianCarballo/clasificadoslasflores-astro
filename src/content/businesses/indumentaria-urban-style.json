@@ -1,0 +1,24 @@
+{
+  "name": "Urban Style Indumentaria",
+  "category": "comercios",
+  "description": "Indumentaria urbana y deportiva para toda la familia. Marcas locales y nacionales, talles reales, cambio asegurado. Nuevos ingresos cada semana y 3 cuotas sin interés.",
+  "shortDescription": "Moda urbana, deportiva y 3 cuotas sin interés.",
+  "address": "Rivadavia 310, Las Flores",
+  "phone": "5492224487654",
+  "whatsapp": "5492224487654",
+  "hasWhatsAppButton": true,
+  "hours": "Lun a Sáb 9–13 / 16–20:30",
+  "image": "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&q=80&auto=format&fit=crop",
+  "gallery": [
+    "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&q=80&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1445205170230-053b83016050?w=800&q=80&auto=format&fit=crop"
+  ],
+  "verified": true,
+  "featured": true,
+  "plan": "plata",
+  "rating": 4.7,
+  "reviewsCount": 156,
+  "tags": ["ropa", "deporte", "ofertas"],
+  "instagram": "https://instagram.com",
+  "createdAt": "2026-01-28"
+}

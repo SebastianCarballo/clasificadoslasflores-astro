@@ -1,0 +1,150 @@
+{
+  "$ref": "#/definitions/businesses",
+  "definitions": {
+    "businesses": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 3
+        },
+        "category": {
+          "type": "string",
+          "enum": [
+            "gastronomia",
+            "servicios",
+            "comercios",
+            "inmuebles",
+            "vehiculos",
+            "empleo",
+            "salud",
+            "educacion"
+          ]
+        },
+        "description": {
+          "type": "string",
+          "minLength": 20
+        },
+        "shortDescription": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 120
+        },
+        "address": {
+          "type": "string",
+          "minLength": 3
+        },
+        "phone": {
+          "type": "string",
+          "pattern": "^\\d{10,15}$",
+          "errorMessage": {
+            "pattern": "Teléfono en formato internacional sin +"
+          }
+        },
+        "whatsapp": {
+          "type": "string",
+          "pattern": "^\\d{10,15}$"
+        },
+        "hasWhatsAppButton": {
+          "type": "boolean",
+          "default": false
+        },
+        "hours": {
+          "type": "string",
+          "minLength": 3
+        },
+        "image": {
+          "type": "string",
+          "format": "uri"
+        },
+        "gallery": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uri"
+          },
+          "minItems": 1
+        },
+        "verified": {
+          "type": "boolean",
+          "default": false
+        },
+        "featured": {
+          "type": "boolean",
+          "default": false
+        },
+        "plan": {
+          "type": "string",
+          "enum": [
+            "gratis",
+            "bronce",
+            "plata",
+            "oro"
+          ]
+        },
+        "rating": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 5
+        },
+        "reviewsCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "latitude": {
+          "type": "number",
+          "minimum": -90,
+          "maximum": 90
+        },
+        "longitude": {
+          "type": "number",
+          "minimum": -180,
+          "maximum": 180
+        },
+        "instagram": {
+          "type": "string",
+          "format": "uri"
+        },
+        "facebook": {
+          "type": "string",
+          "format": "uri"
+        },
+        "website": {
+          "type": "string",
+          "format": "uri"
+        },
+        "createdAt": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "errorMessage": {
+            "pattern": "Formato YYYY-MM-DD"
+          }
+        }
+      },
+      "required": [
+        "name",
+        "category",
+        "description",
+        "shortDescription",
+        "address",
+        "phone",
+        "hours",
+        "image",
+        "gallery",
+        "plan",
+        "rating",
+        "reviewsCount",
+        "createdAt"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

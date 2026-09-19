@@ -1,0 +1,57 @@
+---
+import type { Plan } from '@/types';
+
+interface Props {
+  plan: Plan;
+}
+const { plan } = Astro.props;
+---
+
+<article
+  class:list={[
+    'relative rounded-3xl border p-7 flex flex-col bg-white',
+    plan.highlighted
+      ? 'border-brand-600 ring-2 ring-brand-600/20 shadow-xl scale-[1.02]'
+      : 'border-ink-200 shadow-sm',
+  ]}>
+  {plan.badge && (
+    <span
+      class:list={[
+        'absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide whitespace-nowrap',
+        plan.highlighted ? 'bg-brand-600 text-white' : 'bg-ink-900 text-white',
+      ]}>
+      {plan.badge}
+    </span>
+  )}
+  <h3 class="font-display font-bold text-xl">{plan.name}</h3>
+  <p class="mt-1 text-2xl font-display font-extrabold text-ink-900">{plan.priceLabel}</p>
+  <p class="mt-2 text-sm text-slate-600">{plan.description}</p>
+  <ul class="mt-5 space-y-2.5 text-sm flex-1">
+    {
+      plan.features.map((f) => (
+        <li class="flex gap-2">
+          <span class="text-emerald-500 font-bold" aria-hidden="true">✓</span>
+          <span>{f}</span>
+        </li>
+      ))
+    }
+    {
+      plan.limitations?.map((l) => (
+        <li class="flex gap-2 text-slate-400">
+          <span aria-hidden="true">–</span>
+          <span>{l}</span>
+        </li>
+      ))
+    }
+  </ul>
+  <a
+    href="/publicar"
+    class:list={[
+      'mt-6 inline-flex justify-center px-4 py-3 rounded-xl text-sm font-bold transition active:scale-[0.98]',
+      plan.highlighted
+        ? 'bg-brand-600 text-white hover:bg-brand-700 shadow-lg shadow-brand-600/25'
+        : 'bg-ink-900 text-white hover:bg-ink-800',
+    ]}>
+    {plan.cta}
+  </a>
+</article>

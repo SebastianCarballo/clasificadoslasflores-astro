@@ -1,0 +1,16 @@
+{
+  "name": "Plata",
+  "price": 12000,
+  "priceLabel": "$12.000 / mes",
+  "description": "Para comercios que quieren reputación y catálogo.",
+  "features": [
+    "Galería completa + catálogo",
+    "Mapa interactivo",
+    "Redes sociales vinculadas",
+    "Badge “Comercio Verificado”",
+    "Soporte por email"
+  ],
+  "cta": "Elegir Plata",
+  "highlighted": true,
+  "badge": "Más popular"
+}

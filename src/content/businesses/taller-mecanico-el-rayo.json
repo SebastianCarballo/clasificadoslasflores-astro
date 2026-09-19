@@ -1,0 +1,21 @@
+{
+  "name": "Taller Mecánico El Rayo",
+  "category": "vehiculos",
+  "description": "Mecánica integral, diagnóstico computarizado, frenos, distribución y service completo. Atención a particulares y flotas. Turnos por WhatsApp.",
+  "shortDescription": "Mecánica integral y diagnóstico computarizado.",
+  "address": "Ruta 3 Km 125, Las Flores",
+  "phone": "5492224334455",
+  "hasWhatsAppButton": false,
+  "hours": "Lun a Vie 8–18hs",
+  "image": "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=800&q=80&auto=format&fit=crop",
+  "gallery": [
+    "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=800&q=80&auto=format&fit=crop"
+  ],
+  "verified": false,
+  "featured": false,
+  "plan": "gratis",
+  "rating": 4.4,
+  "reviewsCount": 41,
+  "tags": ["mecánica", "frenos", "service"],
+  "createdAt": "2026-04-10"
+}

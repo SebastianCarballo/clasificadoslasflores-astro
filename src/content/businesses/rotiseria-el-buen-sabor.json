@@ -1,0 +1,28 @@
+{
+  "name": "Rotisería El Buen Sabor",
+  "category": "gastronomia",
+  "description": "Rotisería familiar con más de 15 años en Las Flores. Milanesas, empanadas, pizzas y menú del día. Delivery rápido al centro y barrios. Ofertas de fin de semana y promociones para eventos.",
+  "shortDescription": "Milanesas, empanadas y menú del día con delivery.",
+  "address": "Av. San Martín 425, Las Flores",
+  "phone": "5492224421234",
+  "whatsapp": "5492224421234",
+  "hasWhatsAppButton": true,
+  "hours": "Lun a Dom 11:30–14:30 / 19:30–23:30",
+  "image": "https://images.unsplash.com/photo-1544025162-d76694265947?w=800&q=80&auto=format&fit=crop",
+  "gallery": [
+    "https://images.unsplash.com/photo-1544025162-d76694265947?w=800&q=80&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800&q=80&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&q=80&auto=format&fit=crop"
+  ],
+  "verified": true,
+  "featured": true,
+  "plan": "oro",
+  "rating": 4.8,
+  "reviewsCount": 214,
+  "tags": ["delivery", "menu del día", "empanadas", "pizza"],
+  "latitude": -36.0172,
+  "longitude": -59.1,
+  "instagram": "https://instagram.com",
+  "facebook": "https://facebook.com",
+  "createdAt": "2026-01-12"
+}

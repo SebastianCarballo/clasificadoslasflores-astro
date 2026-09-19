@@ -1,0 +1,84 @@
+---
+import type { Business } from '@/types';
+import { Image } from 'astro:assets';
+import { getCategory } from '@/data/categories';
+import { whatsappLink } from '@/utils/site';
+
+interface Props {
+  business: Business;
+}
+
+const { business: b } = Astro.props;
+const cat = await getCategory(b.category);
+const isOro = b.plan === 'oro';
+---
+
+<article
+  data-business-card
+  data-slug={b.slug}
+  data-category={b.category}
+  class:list={[
+    'card-hover group bg-white rounded-2xl border overflow-hidden flex flex-col',
+    isOro ? 'border-amber-300 ring-1 ring-amber-200 shadow-[0_8px_30px_-12px_rgba(245,158,11,.45)]' : 'border-ink-100 shadow-sm hover:shadow-lg',
+  ]}>
+  <a href={`/comercio/${b.slug}`} class="relative block aspect-[16/10] overflow-hidden bg-ink-100" tabindex="-1" aria-hidden="true">
+    <Image
+      src={b.image}
+      alt={b.name}
+      inferSize
+      widths={[400, 800]}
+      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+      loading="lazy"
+      decoding="async"
+      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+    />
+    <div class="absolute top-3 left-3 flex gap-1.5">
+      {b.plan === 'oro' && (
+        <span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-gradient-to-r from-amber-400 to-yellow-500 text-ink-950 shadow">★ ORO</span>
+      )}
+      {b.verified && (
+        <span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-ink-950/85 text-white backdrop-blur">✓ Verificado</span>
+      )}
+    </div>
+    <span class="absolute bottom-3 left-3 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-white/95 text-ink-900">
+      {cat?.icon} {cat?.name}
+    </span>
+  </a>
+
+  <div class="p-5 flex flex-col flex-1">
+    <div class="flex items-center gap-1 text-sm" aria-label={`Calificación ${b.rating} de 5`}>
+      <span class="text-amber-500" aria-hidden="true">★</span>
+      <strong>{b.rating.toFixed(1)}</strong>
+      <span class="text-slate-500">({b.reviewsCount})</span>
+    </div>
+    <a href={`/comercio/${b.slug}`} class="mt-1.5 font-display font-bold text-lg leading-snug hover:text-brand-700">
+      {b.name}
+    </a>
+    <p class="mt-1 text-sm text-slate-600 line-clamp-2">{b.shortDescription}</p>
+    <p class="mt-2 text-xs text-slate-500"><span aria-hidden="true">📍</span> {b.address}</p>
+
+    <div class="mt-4 pt-4 border-t border-ink-100 flex gap-2 mt-auto">
+      {b.hasWhatsAppButton && b.whatsapp ? (
+        <a
+          href={whatsappLink(b.whatsapp, b.name)}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl bg-[#25D366] text-white text-sm font-semibold hover:brightness-95 active:scale-[0.98] transition">
+          💬 WhatsApp
+        </a>
+      ) : (
+        <a
+          href={`/comercio/${b.slug}`}
+          class="flex-1 inline-flex items-center justify-center px-3 py-2.5 rounded-xl bg-ink-100 text-ink-900 text-sm font-semibold hover:bg-ink-200 transition">
+          Ver perfil
+        </a>
+      )}
+      <a
+        href={`/comercio/${b.slug}`}
+        class="min-w-11 min-h-11 px-3 py-2.5 rounded-xl border border-ink-200 text-sm font-semibold hover:bg-ink-50 transition inline-flex items-center justify-center"
+        aria-label={`Ver ficha de ${b.name}`}>
+        <span aria-hidden="true">→</span>
+      </a>
+    </div>
+  </div>
+</article>

@@ -1,0 +1,29 @@
+---
+import { listCategories, countByCategory } from '@/data/categories';
+
+const categories = await listCategories();
+const counts = await countByCategory();
+---
+
+<section aria-label="Categorías" class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+  {
+    categories.map((c) => {
+      const count = counts[c.slug] ?? 0;
+      return (
+        <a
+          href={`/categoria/${c.slug}`}
+          class="card-hover group bg-white rounded-2xl border border-ink-100 p-5 shadow-sm hover:shadow-lg text-left">
+          <span
+            class={`w-11 h-11 rounded-xl bg-gradient-to-br ${c.color} grid place-items-center text-xl mb-3`}
+            aria-hidden="true">
+            {c.icon}
+          </span>
+          <span class="block font-display font-bold">{c.name}</span>
+          <span class="block text-xs text-slate-500 mt-1">
+            {count} {count === 1 ? 'publicación' : 'publicaciones'}
+          </span>
+        </a>
+      );
+    })
+  }
+</section>

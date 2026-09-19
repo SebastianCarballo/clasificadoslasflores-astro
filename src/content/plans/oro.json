@@ -1,0 +1,16 @@
+{
+  "name": "Oro",
+  "price": 25000,
+  "priceLabel": "$25.000 / mes",
+  "description": "Máxima visibilidad para marcas líderes de la ciudad.",
+  "features": [
+    "Todo lo de Plata",
+    "Destacado en Home (Hero / Banners)",
+    "Borde dorado distintivo",
+    "Difusión en redes de Clasificados",
+    "Soporte prioritario"
+  ],
+  "cta": "Quiero ser Oro",
+  "highlighted": false,
+  "badge": "Alianza Premium"
+}

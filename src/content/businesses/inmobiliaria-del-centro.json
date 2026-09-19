@@ -1,0 +1,23 @@
+{
+  "name": "Inmobiliaria del Centro",
+  "category": "inmuebles",
+  "description": "Alquileres, ventas y tasaciones. Cartera actualizada de casas, departamentos y locales comerciales en Las Flores. Asesoramiento legal y financiación.",
+  "shortDescription": "Alquileres y ventas con asesoramiento integral.",
+  "address": "Belgrano 220, Las Flores",
+  "phone": "5492224401122",
+  "whatsapp": "5492224401122",
+  "hasWhatsAppButton": true,
+  "hours": "Lun a Vie 9–18hs",
+  "image": "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&q=80&auto=format&fit=crop",
+  "gallery": [
+    "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&q=80&auto=format&fit=crop"
+  ],
+  "verified": true,
+  "featured": false,
+  "plan": "plata",
+  "rating": 4.6,
+  "reviewsCount": 74,
+  "tags": ["alquiler", "venta", "tasaciones"],
+  "website": "https://example.com",
+  "createdAt": "2026-03-01"
+}

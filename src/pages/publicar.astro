@@ -1,0 +1,97 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { listCategories } from '@/data/categories';
+import { listPlans } from '@/data/plans';
+
+const categories = await listCategories();
+const plans = await listPlans();
+---
+
+<BaseLayout
+  title="Publicá tu negocio gratis"
+  description="Publicá tu comercio, oficio o emprendimiento en Clasificados Las Flores en 2 minutos. Empezá gratis y recibí consultas por WhatsApp."
+>
+  <section class="max-w-3xl mx-auto px-4 sm:px-6 py-12">
+    <p class="text-xs font-bold uppercase tracking-[0.18em] text-brand-600">Alta en 2 minutos</p>
+    <h1 class="mt-2 font-display font-extrabold text-4xl tracking-tight">Publicá tu negocio</h1>
+    <p class="mt-3 text-slate-600">Completá el formulario y se abre WhatsApp con tu solicitud lista para enviar. Sin tarjeta, sin compromiso.</p>
+
+    <form
+      id="form-publicar"
+      class="mt-8 bg-white rounded-3xl border border-ink-100 shadow-sm p-6 sm:p-8 space-y-5"
+      novalidate>
+      <div class="grid sm:grid-cols-2 gap-4">
+        <div>
+          <label for="nombre" class="block text-sm font-semibold mb-1.5">Nombre del negocio *</label>
+          <input id="nombre" name="nombre" required minlength="3" placeholder="Ej: Rotisería El Buen Sabor" autocomplete="organization" class="w-full px-4 py-3 rounded-xl border border-ink-200 outline-none focus:ring-2 focus:ring-brand-500" />
+        </div>
+        <div>
+          <label for="categoria" class="block text-sm font-semibold mb-1.5">Categoría *</label>
+          <select id="categoria" name="categoria" required class="w-full px-4 py-3 rounded-xl border border-ink-200 bg-white">
+            <option value="">Seleccionar…</option>
+            {categories.map((c) => <option value={c.name}>{c.name}</option>)}
+          </select>
+        </div>
+      </div>
+      <div class="grid sm:grid-cols-2 gap-4">
+        <div>
+          <label for="whatsapp" class="block text-sm font-semibold mb-1.5">Tu WhatsApp *</label>
+          <input id="whatsapp" name="whatsapp" type="tel" required inputmode="tel" placeholder="2224 00-0000" autocomplete="tel" class="w-full px-4 py-3 rounded-xl border border-ink-200 outline-none focus:ring-2 focus:ring-brand-500" />
+        </div>
+        <div>
+          <label for="plan" class="block text-sm font-semibold mb-1.5">Plan deseado</label>
+          <select id="plan" name="plan" class="w-full px-4 py-3 rounded-xl border border-ink-200 bg-white">
+            {plans.map((p) => <option value={p.name}>{p.name} — {p.priceLabel}</option>)}
+          </select>
+        </div>
+      </div>
+      <div>
+        <label for="desc" class="block text-sm font-semibold mb-1.5">Descripción breve *</label>
+        <textarea id="desc" name="descripcion" rows="4" required minlength="20" placeholder="Qué ofrecés, horarios, zona de atención… (mín. 20 caracteres)" class="w-full px-4 py-3 rounded-xl border border-ink-200 outline-none focus:ring-2 focus:ring-brand-500"></textarea>
+      </div>
+      <p id="form-error" role="alert" tabindex="-1" hidden class="text-sm font-semibold text-red-600 rounded-xl"></p>
+      <button type="submit" class="w-full px-6 py-4 rounded-xl bg-[#25D366] text-white font-bold hover:brightness-95 active:scale-[0.99] transition">
+        <span aria-hidden="true">💬</span> Enviar por WhatsApp y activar mi ficha
+      </button>
+      <p class="text-xs text-slate-500 text-center">Al enviar aceptás ser contactado por el equipo de Clasificados Las Flores.</p>
+    </form>
+
+    <script>
+      const DESTINO = '5492224000000';
+      const form = document.getElementById('form-publicar') as HTMLFormElement | null;
+      const error = document.getElementById('form-error');
+      form?.addEventListener('submit', (e: Event) => {
+        e.preventDefault();
+        const data = new FormData(form);
+        const nombre = String(data.get('nombre') ?? '').trim();
+        const categoria = String(data.get('categoria') ?? '').trim();
+        const whatsapp = String(data.get('whatsapp') ?? '').trim();
+        const plan = String(data.get('plan') ?? '').trim();
+        const desc = String(data.get('descripcion') ?? '').trim();
+        const faltantes = [];
+        if (nombre.length < 3) faltantes.push('nombre (mín. 3 caracteres)');
+        if (!categoria) faltantes.push('categoría');
+        if (whatsapp.replace(/\D/g, '').length < 6) faltantes.push('WhatsApp válido');
+        if (desc.length < 20) faltantes.push('descripción (mín. 20 caracteres)');
+        if (faltantes.length) {
+          if (error) {
+            error.textContent = `Revisá: ${faltantes.join(', ')}.`;
+            error.hidden = false;
+            error.focus();
+          }
+          return;
+        }
+        if (error) error.hidden = true;
+        const texto =
+          `Hola Clasificados Las Flores, quiero publicar mi negocio:%0A` +
+          `• Negocio: ${encodeURIComponent(nombre)}%0A` +
+          `• Categoría: ${encodeURIComponent(categoria)}%0A` +
+          `• Mi WhatsApp: ${encodeURIComponent(whatsapp)}%0A` +
+          `• Plan: ${encodeURIComponent(plan)}%0A` +
+          `• Descripción: ${encodeURIComponent(desc)}`;
+        // wa.me espera el texto ya codificado; los %0A son saltos de línea
+        window.open(`https://wa.me/${DESTINO}?text=${texto}`, '_blank', 'noopener,noreferrer');
+      });
+    </script>
+  </section>
+</BaseLayout>
