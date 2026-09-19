@@ -46,7 +46,20 @@ pnpm preview
 pnpm check       # tipos (0 errores exigido)
 pnpm smoke       # build + preview + 24 asserts + budgets
 pnpm verify      # check + smoke
+pnpm design:lint # valida tokens y contraste WCAG de DESIGN.md
+pnpm design:export # exporta tokens al formato @theme de Tailwind 4
 ```
+
+## Sistema visual
+
+`DESIGN.md` es la fuente de verdad visual para agentes de código y futuras
+iteraciones del sitio. Define colores, tipografías, espaciado, radios,
+componentes y reglas de uso alineadas con `src/styles/global.css`.
+
+Después de cambiar la identidad visual, ejecutá `pnpm design:lint` para detectar
+referencias rotas, contraste insuficiente y tokens huérfanos. La exportación
+`pnpm design:export` permite revisar el equivalente de tokens en CSS `@theme`
+de Tailwind 4.
 
 ## Siguiente paso
 

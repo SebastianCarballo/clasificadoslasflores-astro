@@ -19,9 +19,6 @@
         "color": {
           "type": "string",
           "minLength": 3
-        },
-        "$schema": {
-          "type": "string"
         }
       },
       "required": [
