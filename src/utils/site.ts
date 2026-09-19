@@ -74,6 +74,19 @@ export function localBusinessSchema(b: {
     },
     telephone: `+${b.phone}`,
     image: [b.image.startsWith('http') ? b.image : `${base}${b.image.startsWith('/') ? '' : '/'}${b.image}`],
+    areaServed: {
+      '@type': 'City',
+      name: 'Las Flores',
+      containedInPlace: {
+        '@type': 'AdministrativeArea',
+        name: 'Buenos Aires, Argentina',
+      },
+    },
+    // AEO: qué fragmento puede "hablar" un asistente de voz / AI Overview
+    speakable: {
+      '@type': 'SpeakableSpecification',
+      cssSelector: ['.ficha-desc'],
+    },
     ...(b.latitude !== undefined &&
       b.longitude !== undefined && {
         geo: {
@@ -90,9 +103,7 @@ export function localBusinessSchema(b: {
   };
 }
 
-export function breadcrumbSchema(
-  items: { name: string; path: string }[],
-) {
+export function breadcrumbSchema(items: { name: string; path: string }[]) {
   return {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
@@ -101,6 +112,52 @@ export function breadcrumbSchema(
       position: i + 1,
       name: item.name,
       item: `${SITE.url}${item.path}`,
+    })),
+  };
+}
+
+// NAP canónico del portal para SEO local: quiénes somos, dónde operamos, cómo contactarnos.
+export function organizationSchema() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: SITE.name,
+    url: SITE.url,
+    logo: `${SITE.url}/favicon.svg`,
+    description: SITE.tagline,
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: 'Las Flores',
+      addressRegion: 'Buenos Aires',
+      addressCountry: 'AR',
+    },
+    areaServed: {
+      '@type': 'City',
+      name: 'Las Flores',
+    },
+    contactPoint: {
+      '@type': 'ContactPoint',
+      telephone: '+5492224000000',
+      contactType: 'sales',
+      areaServed: 'AR',
+      availableLanguage: 'es',
+    },
+    sameAs: [
+      'https://instagram.com/clasificadoslasflores',
+      'https://facebook.com/clasificadoslasflores',
+    ],
+  };
+}
+
+// AEO: las respuestas deben existir como datos, no solo como texto visible.
+export function faqPageSchema(faqs: { q: string; a: string }[]) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map((f) => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
     })),
   };
 }

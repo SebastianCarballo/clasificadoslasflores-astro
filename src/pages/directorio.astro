@@ -21,7 +21,7 @@ const categories = await listCategories();
       <h1 class="font-display font-extrabold text-3xl sm:text-5xl tracking-tight">Directorio local</h1>
       <p class="mt-2 text-slate-300" aria-live="polite" role="status"><span id="conteo">{businesses.length}</span> resultados · ordenados por relevancia y plan</p>
 
-      <form method="get" role="search" id="form-buscar" class="mt-6 bg-white rounded-2xl p-2 flex flex-col md:flex-row gap-2">
+      <form method="get" role="search" id="form-buscar" data-event="buscar" class="mt-6 bg-white rounded-2xl p-2 flex flex-col md:flex-row gap-2">
         <label class="sr-only" for="q">Buscar</label>
         <input
           id="q" name="q" type="search" inputmode="search" enterkeyhint="search"
@@ -54,6 +54,11 @@ const categories = await listCategories();
   </section>
 
   <section class="max-w-7xl mx-auto px-4 sm:px-6 py-10">
+    {/* HMW1/HMW4: el sistema se explica solo — nadie debería adivinar qué es "Oro" o "Verificado" */}
+    <ul class="mb-6 flex flex-wrap gap-x-5 gap-y-2 text-xs text-slate-600" aria-label="Qué significan las insignias">
+      <li><span class="font-bold text-ink-900">✓ Verificado</span> — identidad y dirección confirmadas</li>
+      <li><span class="font-bold text-amber-600">★ Oro</span> — aliado destacado de la semana</li>
+    </ul>
     <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5" id="resultados">
       {businesses.map((b) => <BusinessCard business={b} />)}
     </div>

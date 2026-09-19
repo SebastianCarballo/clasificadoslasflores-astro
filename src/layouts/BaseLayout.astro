@@ -46,6 +46,11 @@ const imageUrl = image.startsWith('http') ? image : `${SITE.url}${image}`;
 
     <meta name="theme-color" content="#1c72ef" />
     <meta name="robots" content="index, follow" />
+    {/* SEO local clásico: georreferenciación de la página */}
+    <meta name="geo.region" content="AR-B" />
+    <meta name="geo.placename" content="Las Flores, Buenos Aires, Argentina" />
+    <meta name="geo.position" content="-36.0172;-59.1" />
+    <meta name="ICBM" content="-36.0172, -59.1" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
     {/* Fuentes self-hosted vía fontsource (ver src/styles/global.css). Sin terceros bloqueantes. */}
@@ -62,5 +67,25 @@ const imageUrl = image.startsWith('http') ? image : `${SITE.url}${image}`;
       <slot />
     </main>
     <Footer />
+    <script>
+      // Dispatcher global de eventos de conversión (ver src/utils/analytics.ts).
+      // Los CTAs declaran data-event="nombre" y data-props='{"k":"v"}'.
+      import { track } from '@/utils/analytics';
+      document.addEventListener('click', (e: Event) => {
+        const el = (e.target as HTMLElement).closest?.('[data-event]') as HTMLElement | null;
+        if (!el) return;
+        let props: Record<string, string> = {};
+        try {
+          props = JSON.parse(el.dataset.props ?? '{}');
+        } catch {
+          props = {};
+        }
+        track(el.dataset.event ?? 'click', props);
+      });
+      document.addEventListener('submit', (e: Event) => {
+        const form = e.target as HTMLFormElement;
+        if (form?.dataset?.event) track(form.dataset.event, { form: form.id || 'sin-id' });
+      });
+    </script>
   </body>
 </html>

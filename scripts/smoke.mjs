@@ -67,6 +67,10 @@ try {
   check('home tiene 1 h1', (home.text.match(/<h1/g) ?? []).length === 1);
   check('home canonical', home.text.includes('rel="canonical"'));
   check('home OG propia', home.text.includes('/og-cover.svg'));
+  check('home prueba social real', home.text.includes('promedio en') && home.text.includes('verificados'));
+  check('home microcopy anti-riesgo', home.text.includes('Sin tarjeta'));
+  check('home Organization NAP', home.text.includes('"Organization"') && home.text.includes('areaServed'));
+  check('home geo-metas', home.text.includes('geo.region') && home.text.includes('AR-B'));
   check('home sin Google Fonts CDN', !home.text.includes('fonts.googleapis.com'));
   check(
     'home sin <img> externos',
@@ -83,6 +87,7 @@ try {
   check('directorio 200', dir.status === 200);
   check('directorio índice búsqueda', dir.text.includes('id="businesses-index"'));
   check('directorio 9 cards con data-slug', (dir.text.match(/data-business-card/g) ?? []).length >= 9);
+  check('directorio leyenda de insignias (HMW1)', dir.text.includes('Qué significan las insignias'));
   check('directorio anuncia resultados (aria-live)', dir.text.includes('aria-live="polite"'));
 
   const ficha = await get('/comercio/rotiseria-el-buen-sabor/');
@@ -91,14 +96,26 @@ try {
   check('ficha BreadcrumbList', ficha.text.includes('"BreadcrumbList"'));
   check('ficha mapa OSM', ficha.text.includes('id="mapa-negocio"'));
   check('ficha CTA sticky móvil', ficha.text.includes('Volver al directorio'));
+  check('ficha compartir + reportar', ficha.text.includes('btn-compartir') && ficha.text.includes('Datos incorrectos'));
+  check('ficha tracking whatsapp', ficha.text.includes('data-event="whatsapp_click"'));
+
+  const alta = await get('/publicar');
+  check('publicar expectativas + confirmación (HMW3)', alta.status === 200 && alta.text.includes('Qué pasa después de enviar') && alta.text.includes('form-exito'));
+  const altaOro = await get('/publicar?plan=oro');
+  check('funnel plan preseleccionado (hook cliente)', altaOro.status === 200 && altaOro.text.includes('planes-map') && altaOro.text.includes('data-plan-banner-cliente'));
+
+  const cat = await get('/categoria/servicios/');
+  check('categoría ItemList schema', cat.text.includes('"ItemList"'));
 
   for (const p of ['/categoria/servicios/', '/planes/', '/publicar/', '/contacto/', '/nosotros/']) {
     const r = await get(p);
     check(`${p} 200`, r.status === 200, String(r.status));
   }
+  const planesPage = await get('/planes/');
+  check('planes FAQPage AEO', planesPage.text.includes('"FAQPage"') && planesPage.text.includes('¿Cuánto cuesta publicar?'));
 
   const sm = await get('/sitemap.xml');
-  check('sitemap 200 + fichas', sm.status === 200 && sm.text.includes('/comercio/'));
+  check('sitemap 200 + fichas + lastmod', sm.status === 200 && sm.text.includes('/comercio/') && sm.text.includes('<lastmod>'));
   const robots = await get('/robots.txt');
   check('robots 200', robots.status === 200);
   const og = await get('/og-cover.svg');

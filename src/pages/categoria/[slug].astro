@@ -15,11 +15,24 @@ if (!category) return Astro.redirect('/404');
 
 const businesses = await listBusinesses();
 const results = businesses.filter((b) => b.category === category.slug);
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: `${category.name} en Las Flores`,
+  itemListElement: results.map((b, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    url: `https://clasificadoslasflores.com.ar/comercio/${b.slug}`,
+    name: b.name,
+  })),
+};
 ---
 
 <BaseLayout
   title={`${category.name} en Las Flores`}
   description={`${category.description} Encontrá los mejores ${category.name.toLowerCase()} de Las Flores con contacto directo por WhatsApp.`}
+  schema={schema}
 >
   <section class={`bg-gradient-to-br ${category.color} text-white`}>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12">

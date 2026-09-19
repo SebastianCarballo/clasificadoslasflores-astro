@@ -45,7 +45,9 @@ const { plan } = Astro.props;
     }
   </ul>
   <a
-    href="/publicar"
+    href={`/publicar?plan=${plan.tier}`}
+    data-event="elegir_plan"
+    data-props={JSON.stringify({ plan: plan.tier })}
     class:list={[
       'mt-6 inline-flex justify-center px-4 py-3 rounded-xl text-sm font-bold transition active:scale-[0.98]',
       plan.highlighted

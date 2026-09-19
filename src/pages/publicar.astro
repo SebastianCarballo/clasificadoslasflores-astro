@@ -5,6 +5,11 @@ import { listPlans } from '@/data/plans';
 
 const categories = await listCategories();
 const plans = await listPlans();
+
+// El funnel de planes trae ?plan=bronce|plata|oro para preseleccionar (CRO).
+const planParam = Astro.url.searchParams.get('plan') ?? '';
+const planInicial = plans.some((p) => p.tier === planParam) ? planParam : 'gratis';
+const planElegido = plans.find((p) => p.tier === planInicial);
 ---
 
 <BaseLayout
@@ -15,9 +20,46 @@ const plans = await listPlans();
     <p class="text-xs font-bold uppercase tracking-[0.18em] text-brand-600">Alta en 2 minutos</p>
     <h1 class="mt-2 font-display font-extrabold text-4xl tracking-tight">Publicá tu negocio</h1>
     <p class="mt-3 text-slate-600">Completá el formulario y se abre WhatsApp con tu solicitud lista para enviar. Sin tarjeta, sin compromiso.</p>
+    {planParam && planElegido && (
+      <p data-plan-banner class="mt-4 inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-brand-50 border border-brand-200 text-sm font-semibold text-brand-800" role="status">
+        <span aria-hidden="true">🎯</span> Elegiste el plan {planElegido.name} ({planElegido.priceLabel}) — ya viene seleccionado abajo.
+      </p>
+    )}
+    {/* Mejora progresiva: en hosting estático el ?plan= se aplica en cliente */}
+    <p data-plan-banner-cliente hidden class="mt-4 items-center gap-2 px-4 py-2.5 rounded-xl bg-brand-50 border border-brand-200 text-sm font-semibold text-brand-800" role="status">
+      <span aria-hidden="true">🎯</span> <span>Elegiste el plan <strong data-plan-nombre></strong> — ya viene seleccionado abajo.</span>
+    </p>
+    <script type="application/json" id="planes-map" set:html={JSON.stringify(plans.map(p => ({ tier: p.tier, name: `${p.name} (${p.priceLabel})`, label: p.name })))} />
+    <script>
+      const qp = new URLSearchParams(location.search).get('plan') ?? '';
+      if (qp && !document.querySelector('[data-plan-banner]')) {
+        const map = JSON.parse(document.getElementById('planes-map')?.textContent ?? '[]') as { tier: string; name: string; label: string }[];
+        const match = map.find((p) => p.tier === qp);
+        const select = document.getElementById('plan') as HTMLSelectElement | null;
+        if (match && select) {
+          const opt = Array.from(select.options).find((o) => o.text.startsWith(match.label));
+          if (opt) select.value = opt.value;
+          const banner = document.querySelector('[data-plan-banner-cliente]') as HTMLElement | null;
+          const nombre = banner?.querySelector('[data-plan-nombre]');
+          if (banner && nombre) {
+            nombre.textContent = match.name;
+            banner.hidden = false;
+            banner.classList.add('inline-flex');
+          }
+        }
+      }
+    </script>
+
+    {/* HMW3: qué pasa después — expectativas explícitas calman la ansiedad */}
+    <ol class="mt-8 grid sm:grid-cols-3 gap-3" aria-label="Qué pasa después de enviar">
+      <li class="bg-white rounded-2xl border border-ink-100 p-4 text-sm"><strong class="block font-display">1. Enviás</strong><span class="text-slate-600">Tu solicitud llega a nuestro WhatsApp con todo listo.</span></li>
+      <li class="bg-white rounded-2xl border border-ink-100 p-4 text-sm"><strong class="block font-display">2. Te contactamos</strong><span class="text-slate-600">En menos de 24 hs confirmamos tus datos.</span></li>
+      <li class="bg-white rounded-2xl border border-ink-100 p-4 text-sm"><strong class="block font-display">3. Salís publicado</strong><span class="text-slate-600">Tu ficha aparece en el directorio y Google.</span></li>
+    </ol>
 
     <form
       id="form-publicar"
+      data-event="alta_negocio"
       class="mt-8 bg-white rounded-3xl border border-ink-100 shadow-sm p-6 sm:p-8 space-y-5"
       novalidate>
       <div class="grid sm:grid-cols-2 gap-4">
@@ -36,18 +78,27 @@ const plans = await listPlans();
       <div class="grid sm:grid-cols-2 gap-4">
         <div>
           <label for="whatsapp" class="block text-sm font-semibold mb-1.5">Tu WhatsApp *</label>
-          <input id="whatsapp" name="whatsapp" type="tel" required inputmode="tel" placeholder="2224 00-0000" autocomplete="tel" class="w-full px-4 py-3 rounded-xl border border-ink-200 outline-none focus:ring-2 focus:ring-brand-500" />
+          <input id="whatsapp" name="whatsapp" type="tel" required inputmode="tel" placeholder="2224 00-0000" autocomplete="tel" aria-describedby="whatsapp-hint" class="w-full px-4 py-3 rounded-xl border border-ink-200 outline-none focus:ring-2 focus:ring-brand-500" />
+          <p id="whatsapp-hint" class="mt-1.5 text-xs text-slate-500">Solo números, con código de área. Ej: 2224 12-3456.</p>
         </div>
         <div>
           <label for="plan" class="block text-sm font-semibold mb-1.5">Plan deseado</label>
           <select id="plan" name="plan" class="w-full px-4 py-3 rounded-xl border border-ink-200 bg-white">
-            {plans.map((p) => <option value={p.name}>{p.name} — {p.priceLabel}</option>)}
+            {plans.map((p) => <option value={p.name} selected={p.tier === planInicial}>{p.name} — {p.priceLabel}</option>)}
           </select>
         </div>
       </div>
       <div>
-        <label for="desc" class="block text-sm font-semibold mb-1.5">Descripción breve *</label>
-        <textarea id="desc" name="descripcion" rows="4" required minlength="20" placeholder="Qué ofrecés, horarios, zona de atención… (mín. 20 caracteres)" class="w-full px-4 py-3 rounded-xl border border-ink-200 outline-none focus:ring-2 focus:ring-brand-500"></textarea>
+        <div class="flex items-baseline justify-between gap-2 mb-1.5">
+          <label for="desc" class="block text-sm font-semibold">Descripción breve *</label>
+          <span id="desc-count" class="text-xs text-slate-500" aria-live="polite">0 caracteres (mín. 20)</span>
+        </div>
+        <textarea id="desc" name="descripcion" rows="4" required minlength="20" maxlength="600" aria-describedby="desc-count" placeholder="Qué ofrecés, horarios, zona de atención…" class="w-full px-4 py-3 rounded-xl border border-ink-200 outline-none focus:ring-2 focus:ring-brand-500"></textarea>
+      </div>
+      {/* HMW3: confirmación post-envío — el usuario sabe que funcionó */}
+      <div id="form-exito" hidden role="status" class="rounded-2xl bg-emerald-50 border border-emerald-200 p-5 text-sm">
+        <p class="font-bold text-emerald-800">✓ ¡Solicitud lista! Completá el envío en la ventana de WhatsApp.</p>
+        <p class="mt-1 text-emerald-700">Te contactamos en menos de 24 hs para activar tu ficha. Podés cerrar esta página cuando quieras.</p>
       </div>
       <p id="form-error" role="alert" tabindex="-1" hidden class="text-sm font-semibold text-red-600 rounded-xl"></p>
       <button type="submit" class="w-full px-6 py-4 rounded-xl bg-[#25D366] text-white font-bold hover:brightness-95 active:scale-[0.99] transition">
@@ -82,6 +133,9 @@ const plans = await listPlans();
           return;
         }
         if (error) error.hidden = true;
+        const exito = document.getElementById('form-exito');
+        if (exito) exito.hidden = false;
+        exito?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         const texto =
           `Hola Clasificados Las Flores, quiero publicar mi negocio:%0A` +
           `• Negocio: ${encodeURIComponent(nombre)}%0A` +
@@ -91,6 +145,16 @@ const plans = await listPlans();
           `• Descripción: ${encodeURIComponent(desc)}`;
         // wa.me espera el texto ya codificado; los %0A son saltos de línea
         window.open(`https://wa.me/${DESTINO}?text=${texto}`, '_blank', 'noopener,noreferrer');
+      });
+
+      // HMW2: contador en vivo — previene el error de "muy corto" antes de enviar
+      const desc = document.getElementById('desc') as HTMLTextAreaElement | null;
+      const count = document.getElementById('desc-count');
+      desc?.addEventListener('input', () => {
+        const n = desc.value.trim().length;
+        if (count) {
+          count.textContent = n >= 20 ? `${n} caracteres ✓` : `${n} caracteres (mín. 20)`;
+        }
       });
     </script>
   </section>

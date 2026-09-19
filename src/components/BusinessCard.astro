@@ -63,6 +63,8 @@ const isOro = b.plan === 'oro';
           href={whatsappLink(b.whatsapp, b.name)}
           target="_blank"
           rel="noopener noreferrer"
+          data-event="whatsapp_click"
+          data-props={JSON.stringify({ slug: b.slug, plan: b.plan, origen: 'card' })}
           class="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl bg-[#25D366] text-white text-sm font-semibold hover:brightness-95 active:scale-[0.98] transition">
           💬 WhatsApp
         </a>

@@ -126,6 +126,9 @@
           "errorMessage": {
             "pattern": "Formato YYYY-MM-DD"
           }
+        },
+        "$schema": {
+          "type": "string"
         }
       },
       "required": [

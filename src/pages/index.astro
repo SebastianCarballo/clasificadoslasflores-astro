@@ -7,6 +7,7 @@ import PlanCard from '@/components/PlanCard.astro';
 import { listBusinesses } from '@/data/businesses';
 import { listCategories } from '@/data/categories';
 import { listPlans } from '@/data/plans';
+import { organizationSchema } from '@/utils/site';
 
 const businesses = await listBusinesses();
 const categories = await listCategories();
@@ -15,17 +16,25 @@ const plans = await listPlans();
 const destacados = businesses.filter((b) => b.plan === 'oro' || b.featured).slice(0, 3);
 const recientes = [...businesses].sort((a, b) => b.createdAt.localeCompare(a.createdAt)).slice(0, 6);
 
-const schema = {
-  '@context': 'https://schema.org',
-  '@type': 'WebSite',
-  name: 'Clasificados Las Flores',
-  url: 'https://clasificadoslasflores.com.ar',
-  potentialAction: {
-    '@type': 'SearchAction',
-    target: 'https://clasificadoslasflores.com.ar/directorio?q={search_term_string}',
-    'query-input': 'required name=search_term_string',
+// Prueba social real, calculada en build desde las collections (sin inventar nada)
+const totalResenas = businesses.reduce((acc, b) => acc + b.reviewsCount, 0);
+const ratingPromedio = (businesses.reduce((acc, b) => acc + b.rating, 0) / businesses.length).toFixed(1);
+const pctVerificados = Math.round((businesses.filter((b) => b.verified).length / businesses.length) * 100);
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'Clasificados Las Flores',
+    url: 'https://clasificadoslasflores.com.ar',
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: 'https://clasificadoslasflores.com.ar/directorio?q={search_term_string}',
+      'query-input': 'required name=search_term_string',
+    },
   },
-};
+  organizationSchema(),
+];
 ---
 
 <BaseLayout
@@ -70,6 +79,7 @@ const schema = {
           action="/directorio"
           method="get"
           role="search"
+          data-event="buscar"
           class="mt-8 bg-white rounded-2xl p-2 flex flex-col sm:flex-row gap-2 shadow-2xl max-w-2xl">
           <label class="sr-only" for="q">Buscar comercios o servicios</label>
           <input
@@ -110,6 +120,24 @@ const schema = {
         <div><dt class="text-xs uppercase tracking-wider text-slate-400">Contacto</dt><dd class="font-display font-extrabold text-2xl">Directo</dd></div>
       </dl>
     </div>
+  </section>
+
+  {/* PRUEBA SOCIAL — datos reales del directorio */}
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 pt-10" aria-label="Confianza de la comunidad">
+    <dl class="grid grid-cols-3 gap-3 sm:gap-4 max-w-3xl mx-auto text-center">
+      <div class="bg-white rounded-2xl border border-ink-100 px-3 py-4 shadow-sm">
+        <dd class="font-display font-extrabold text-2xl text-ink-900">★ {ratingPromedio}</dd>
+        <dt class="text-xs text-slate-500 mt-1">promedio en {totalResenas} reseñas</dt>
+      </div>
+      <div class="bg-white rounded-2xl border border-ink-100 px-3 py-4 shadow-sm">
+        <dd class="font-display font-extrabold text-2xl text-ink-900">{pctVerificados}%</dd>
+        <dt class="text-xs text-slate-500 mt-1">perfiles verificados</dt>
+      </div>
+      <div class="bg-white rounded-2xl border border-ink-100 px-3 py-4 shadow-sm">
+        <dd class="font-display font-extrabold text-2xl text-ink-900">{businesses.length}</dd>
+        <dt class="text-xs text-slate-500 mt-1">negocios y contando</dt>
+      </div>
+    </dl>
   </section>
 
   {/* CATEGORÍAS */}
@@ -182,9 +210,10 @@ const schema = {
       <h2 class="font-display font-extrabold text-3xl sm:text-4xl text-balance">¿Tenés un comercio en Las Flores?</h2>
       <p class="mt-3 text-brand-100 max-w-xl mx-auto">Publicá gratis en 2 minutos y empezá a recibir consultas directas a tu WhatsApp.</p>
       <div class="mt-6 flex flex-col sm:flex-row justify-center gap-3">
-        <a href="/publicar" class="px-7 py-3.5 rounded-xl bg-white text-brand-700 font-bold hover:bg-brand-50 active:scale-[0.98] transition">Publicar mi negocio gratis</a>
+        <a href="/publicar" data-event="cta_publicar" class="px-7 py-3.5 rounded-xl bg-white text-brand-700 font-bold hover:bg-brand-50 active:scale-[0.98] transition">Publicar mi negocio gratis</a>
         <a href="/planes" class="px-7 py-3.5 rounded-xl border border-white/40 font-bold hover:bg-white/10">Ver planes</a>
       </div>
+      <p class="mt-4 text-sm text-brand-100">✓ Gratis · ✓ Sin tarjeta · ✓ Listo en 2 minutos</p>
     </div>
   </section>
 </BaseLayout>
