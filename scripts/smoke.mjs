@@ -6,7 +6,7 @@ import { spawn } from 'node:child_process';
 
 const PORT = 4333;
 const BASE = `http://127.0.0.1:${PORT}`;
-const BUDGETS = { homeHtmlBytes: 84_000, cssBytes: 70_000 };
+const BUDGETS = { homeHtmlBytes: 85_000, cssBytes: 70_000 };
 const packageManager = process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm';
 
 let failures = 0;
@@ -78,6 +78,7 @@ try {
   check('home cómo funciona rediseñado', home.text.includes('De la búsqueda al WhatsApp') && home.text.includes('steps-line'));
   check('home Organization NAP', home.text.includes('"Organization"') && home.text.includes('areaServed'));
   check('home geo-metas', home.text.includes('geo.region') && home.text.includes('AR-B'));
+  check('home mobile-first', home.text.includes('viewport-fit=cover') && home.text.includes('min-h-dvh'));
   check('home sin Google Fonts CDN', !home.text.includes('fonts.googleapis.com'));
   check(
     'home sin <img> externos',

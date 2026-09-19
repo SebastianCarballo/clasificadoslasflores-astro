@@ -26,7 +26,7 @@ const imageUrl = image.startsWith('http') ? image : `${SITE.url}${image}`;
 <html lang="es-AR">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalUrl} />
@@ -60,7 +60,7 @@ const imageUrl = image.startsWith('http') ? image : `${SITE.url}${image}`;
     {schema && <script type="application/ld+json" set:html={JSON.stringify(schema)} />}
     <slot name="head" />
   </head>
-  <body class="bg-ink-50 text-ink-900 antialiased min-h-screen flex flex-col">
+  <body class="bg-ink-50 text-ink-900 antialiased min-h-dvh flex flex-col">
     <a href="#contenido" class="skip-link bg-brand-600 text-white px-4 py-2 rounded-lg font-semibold">
       Saltar al contenido
     </a>

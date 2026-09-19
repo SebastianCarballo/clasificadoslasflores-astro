@@ -33,6 +33,22 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Mobile-first: sin scroll horizontal accidental (clip preserva el sticky),
+   sin delay táctil legacy y sin flash gris al tocar */
+html,
+body {
+  overflow-x: clip;
+}
+body {
+  -webkit-tap-highlight-color: transparent;
+}
+a,
+button,
+summary,
+select {
+  touch-action: manipulation;
+}
+
 /* El header es sticky (h-16): que los anclajes no queden ocultos debajo */
 [id] {
   scroll-margin-top: 5rem;
