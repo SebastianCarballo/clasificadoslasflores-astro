@@ -106,6 +106,7 @@ try {
   check('ficha CTA sticky móvil', ficha.text.includes('Volver al directorio'));
   check('ficha compartir + reportar', ficha.text.includes('btn-compartir') && ficha.text.includes('Datos incorrectos'));
   check('ficha tracking whatsapp', ficha.text.includes('data-event="whatsapp_click"'));
+  check('ficha info antes que imagen (h1 → img)', ficha.text.indexOf('<h1') !== -1 && ficha.text.indexOf('<h1') < ficha.text.indexOf('<img'));
 
   const alta = await get('/publicar');
   check('publicar expectativas + confirmación (HMW3)', alta.status === 200 && alta.text.includes('Qué pasa después de enviar') && alta.text.includes('form-exito'));

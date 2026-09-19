@@ -51,10 +51,26 @@ const schema = [
   </nav>
 
   <article class="max-w-7xl mx-auto px-4 sm:px-6 py-8 grid lg:grid-cols-3 gap-8">
-    {/* Columna principal */}
+    {/* Columna principal: primero la info (título, subtítulo, dirección, párrafo), luego la imagen */}
     <div class="lg:col-span-2">
-      <div class="relative rounded-3xl overflow-hidden border border-ink-100 shadow-sm bg-ink-100">
-        <Image src={business.image} alt={business.name} inferSize widths={[800, 1200]} sizes="(max-width: 1024px) 100vw, 66vw" class="w-full aspect-[16/9] object-cover" fetchpriority="high" loading="eager" decoding="async" />
+      <div class="bg-white rounded-3xl border border-ink-100 p-6 sm:p-8">
+        <div class="flex flex-wrap items-center gap-2 text-sm">
+          <span class="text-amber-500" aria-hidden="true">★</span><strong>{business.rating.toFixed(1)}</strong>
+          <span class="text-slate-500">({business.reviewsCount} reseñas)</span>
+          <span class="ml-2 px-2 py-0.5 rounded-full bg-ink-100 text-xs font-semibold">{cat?.icon} {cat?.name}</span>
+          {business.verified && <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold">✓ Verificado</span>}
+        </div>
+        <h1 class="mt-2 font-display font-extrabold text-3xl sm:text-4xl tracking-tight text-balance">{business.name}</h1>
+        <p class="mt-2 text-lg text-slate-600 font-medium text-pretty">{business.shortDescription}</p>
+        <p class="mt-3 text-sm text-slate-600"><span aria-hidden="true">📍</span> {business.address} · <span aria-hidden="true">🕒</span> {business.hours}</p>
+        <p class="ficha-desc mt-4 text-slate-700 leading-relaxed">{business.description}</p>
+        <div class="mt-4 flex flex-wrap gap-2">
+          {business.tags.map((t) => <span class="px-3 py-1 rounded-full bg-ink-100 text-xs font-medium">#{t}</span>)}
+        </div>
+      </div>
+
+      <div class="mt-6 relative rounded-3xl overflow-hidden border border-ink-100 shadow-sm bg-ink-100">
+        <Image src={business.image} alt={business.name} inferSize widths={[800, 1200]} sizes="(max-width: 1024px) 100vw, 66vw" class="w-full aspect-[16/9] object-cover" loading="eager" decoding="async" />
         <div class="absolute top-4 left-4 flex gap-2">
           {business.plan === 'oro' && <span class="px-3 py-1.5 rounded-full text-xs font-bold bg-gradient-to-r from-amber-400 to-yellow-500">★ PLAN ORO</span>}
           {business.verified && <span class="px-3 py-1.5 rounded-full text-xs font-bold bg-ink-950/85 text-white">✓ Comercio Verificado</span>}
@@ -68,19 +84,6 @@ const schema = [
           ))}
         </div>
       )}
-
-      <div class="mt-6 bg-white rounded-3xl border border-ink-100 p-6 sm:p-8">
-        <div class="flex items-center gap-2 text-sm">
-          <span class="text-amber-500">★</span><strong>{business.rating.toFixed(1)}</strong>
-          <span class="text-slate-400">({business.reviewsCount} reseñas)</span>
-          <span class="ml-2 px-2 py-0.5 rounded-full bg-ink-100 text-xs font-semibold">{cat?.icon} {cat?.name}</span>
-        </div>
-        <h1 class="mt-2 font-display font-extrabold text-3xl sm:text-4xl tracking-tight text-balance">{business.name}</h1>
-        <p class="ficha-desc mt-4 text-slate-700 leading-relaxed">{business.description}</p>
-        <div class="mt-4 flex flex-wrap gap-2">
-          {business.tags.map((t) => <span class="px-3 py-1 rounded-full bg-ink-100 text-xs font-medium">#{t}</span>)}
-        </div>
-      </div>
 
       {related.length > 0 && (
         <section class="mt-8" aria-label="Relacionados">
