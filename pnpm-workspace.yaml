@@ -1,3 +1,6 @@
+packages:
+  - '.'
+  - 'mcp-server'
 allowBuilds:
   esbuild: true
   sharp: true

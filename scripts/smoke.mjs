@@ -24,7 +24,7 @@ async function get(path) {
 
 function run(cmd, args) {
   return new Promise((resolve, reject) => {
-    const p = spawn(cmd, args, { shell: true, stdio: 'inherit' });
+    const p = spawn(cmd, args, { shell: true, stdio: 'pipe' });
     p.on('error', reject);
     p.on('exit', (code) => (code === 0 ? resolve() : reject(new Error(`${cmd} exit ${code}`))));
   });
