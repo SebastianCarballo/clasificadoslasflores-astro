@@ -147,6 +147,24 @@ body {
   animation: spin-slow 26s linear infinite;
 }
 
+@keyframes horizon-sweep {
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: translateX(-16%) scaleX(0.88);
+  }
+  50% {
+    opacity: 0.75;
+    transform: translateX(16%) scaleX(1.08);
+  }
+}
+.hero-horizon {
+  background: radial-gradient(ellipse at center, rgb(125 211 252 / 0.28), transparent 68%);
+  filter: blur(18px);
+  animation: horizon-sweep 12s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
 @keyframes shine-text {
   0%,
   100% {
