@@ -6,7 +6,7 @@ import { spawn } from 'node:child_process';
 
 const PORT = 4333;
 const BASE = `http://127.0.0.1:${PORT}`;
-const BUDGETS = { homeHtmlBytes: 70_000, cssBytes: 60_000 };
+const BUDGETS = { homeHtmlBytes: 75_000, cssBytes: 70_000 };
 const packageManager = process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm';
 
 let failures = 0;
@@ -68,7 +68,11 @@ try {
   check('home canonical', home.text.includes('rel="canonical"'));
   check('home OG propia', home.text.includes('/og-cover.svg'));
   check('home prueba social real', home.text.includes('promedio en') && home.text.includes('verificados'));
+  check('home motion system', home.text.includes('data-reveal-group') && home.text.includes('float-soft'));
+  check('home iconos SVG marca', home.text.includes('icon-whatsapp') || home.text.includes('icon-search'));
   check('home microcopy anti-riesgo', home.text.includes('Sin tarjeta'));
+  check('home copy honesto', home.text.includes('Comercios destacados') && !home.text.includes('de la semana'));
+  check('home cómo funciona rediseñado', home.text.includes('De la búsqueda al WhatsApp') && home.text.includes('steps-line'));
   check('home Organization NAP', home.text.includes('"Organization"') && home.text.includes('areaServed'));
   check('home geo-metas', home.text.includes('geo.region') && home.text.includes('AR-B'));
   check('home sin Google Fonts CDN', !home.text.includes('fonts.googleapis.com'));

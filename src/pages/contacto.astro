@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import Icon from '@/components/Icon.astro';
 ---
 
 <BaseLayout
@@ -10,8 +11,8 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     <h1 class="font-display font-extrabold text-4xl tracking-tight">Contacto</h1>
     <p class="mt-3 text-slate-600">Publicidad, alianzas, soporte de planes y reportes. Respondemos en el día.</p>
     <div class="mt-8 grid sm:grid-cols-2 gap-4">
-      <a href="https://wa.me/5492224000000" target="_blank" rel="noopener noreferrer" class="bg-[#25D366] text-white rounded-2xl p-6 font-bold hover:brightness-95">💬 WhatsApp directo<span class="block text-sm font-normal opacity-90">+54 9 2224 00-0000</span></a>
-      <a href="mailto:hola@clasificadoslasflores.com.ar" class="bg-ink-950 text-white rounded-2xl p-6 font-bold hover:bg-ink-800">✉️ Email<span class="block text-sm font-normal text-slate-300">hola@clasificadoslasflores.com.ar</span></a>
+      <a href="https://wa.me/5492224000000" target="_blank" rel="noopener noreferrer" class="bg-[#25D366] text-white rounded-2xl p-6 font-bold hover:brightness-95 active:scale-[0.99] transition btn-sheen"><span class="inline-flex items-center gap-2"><Icon name="whatsapp" size={20} /> WhatsApp directo</span><span class="block text-sm font-normal opacity-90 mt-1">+54 9 2224 00-0000</span></a>
+      <a href="mailto:hola@clasificadoslasflores.com.ar" class="bg-ink-950 text-white rounded-2xl p-6 font-bold hover:bg-ink-800 transition"><span class="inline-flex items-center gap-2"><Icon name="mail" size={20} /> Email</span><span class="block text-sm font-normal text-slate-300 mt-1">hola@clasificadoslasflores.com.ar</span></a>
     </div>
     <div class="mt-6 bg-white rounded-3xl border border-ink-100 p-6 sm:p-8">
       <h2 class="font-display font-bold text-lg">Horario de atención</h2>

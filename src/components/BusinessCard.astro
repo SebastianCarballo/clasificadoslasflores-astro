@@ -1,6 +1,7 @@
 ---
 import type { Business } from '@/types';
 import { Image } from 'astro:assets';
+import Icon from '@/components/Icon.astro';
 import { getCategory } from '@/data/categories';
 import { whatsappLink } from '@/utils/site';
 
@@ -19,7 +20,7 @@ const isOro = b.plan === 'oro';
   data-category={b.category}
   class:list={[
     'card-hover group bg-white rounded-2xl border overflow-hidden flex flex-col',
-    isOro ? 'border-amber-300 ring-1 ring-amber-200 shadow-[0_8px_30px_-12px_rgba(245,158,11,.45)]' : 'border-ink-100 shadow-sm hover:shadow-lg',
+    isOro ? 'oro-card' : 'border-ink-100 shadow-sm hover:shadow-lg',
   ]}>
   <a href={`/comercio/${b.slug}`} class="relative block aspect-[16/10] overflow-hidden bg-ink-100" tabindex="-1" aria-hidden="true">
     <Image
@@ -65,8 +66,8 @@ const isOro = b.plan === 'oro';
           rel="noopener noreferrer"
           data-event="whatsapp_click"
           data-props={JSON.stringify({ slug: b.slug, plan: b.plan, origen: 'card' })}
-          class="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl bg-[#25D366] text-white text-sm font-semibold hover:brightness-95 active:scale-[0.98] transition">
-          💬 WhatsApp
+          class="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl bg-[#25D366] text-white text-sm font-semibold hover:brightness-95 active:scale-[0.98] transition btn-sheen">
+          <Icon name="whatsapp" size={17} /> WhatsApp
         </a>
       ) : (
         <a
@@ -77,9 +78,9 @@ const isOro = b.plan === 'oro';
       )}
       <a
         href={`/comercio/${b.slug}`}
-        class="min-w-11 min-h-11 px-3 py-2.5 rounded-xl border border-ink-200 text-sm font-semibold hover:bg-ink-50 transition inline-flex items-center justify-center"
+        class="min-w-11 min-h-11 px-3 py-2.5 rounded-xl border border-ink-200 text-sm font-semibold hover:bg-ink-50 hover:border-ink-900 transition inline-flex items-center justify-center slide-arrow"
         aria-label={`Ver ficha de ${b.name}`}>
-        <span aria-hidden="true">→</span>
+        <Icon name="arrow-right" size={16} />
       </a>
     </div>
   </div>

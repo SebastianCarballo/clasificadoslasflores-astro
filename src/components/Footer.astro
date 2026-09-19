@@ -1,5 +1,6 @@
 ---
 import { listCategories } from '@/data/categories';
+import Icon from '@/components/Icon.astro';
 
 // URL del estudio creador — actualizar si cambia el dominio oficial.
 const STUDIO_URL = 'https://membystudio.com';
@@ -73,9 +74,9 @@ const categories = await listCategories();
         <li>✉️ hola@clasificadoslasflores.com.ar</li>
       </ul>
       <div class="flex gap-2 mt-4">
-        <a href="https://instagram.com/clasificadoslasflores" target="_blank" rel="noopener noreferrer" aria-label="Instagram de Clasificados Las Flores" class="w-9 h-9 rounded-full bg-white/10 grid place-items-center hover:bg-white/20"><span aria-hidden="true">📸</span></a>
-        <a href="https://facebook.com/clasificadoslasflores" target="_blank" rel="noopener noreferrer" aria-label="Facebook de Clasificados Las Flores" class="w-9 h-9 rounded-full bg-white/10 grid place-items-center hover:bg-white/20"><span aria-hidden="true">📘</span></a>
-        <a href="https://wa.me/5492224000000" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp de Clasificados Las Flores" class="w-9 h-9 rounded-full bg-white/10 grid place-items-center hover:bg-white/20"><span aria-hidden="true">💬</span></a>
+        <a href="https://instagram.com/clasificadoslasflores" target="_blank" rel="noopener noreferrer" aria-label="Instagram de Clasificados Las Flores" class="w-10 h-10 rounded-full bg-white/10 grid place-items-center hover:bg-white/20 hover:scale-105 active:scale-95 transition"><Icon name="instagram" size={17} /></a>
+        <a href="https://facebook.com/clasificadoslasflores" target="_blank" rel="noopener noreferrer" aria-label="Facebook de Clasificados Las Flores" class="w-10 h-10 rounded-full bg-white/10 grid place-items-center hover:bg-white/20 hover:scale-105 active:scale-95 transition"><Icon name="facebook" size={17} /></a>
+        <a href="https://wa.me/5492224000000" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp de Clasificados Las Flores" class="w-10 h-10 rounded-full bg-white/10 grid place-items-center hover:bg-white/20 hover:scale-105 active:scale-95 transition"><Icon name="whatsapp" size={17} /></a>
       </div>
     </div>
   </div>

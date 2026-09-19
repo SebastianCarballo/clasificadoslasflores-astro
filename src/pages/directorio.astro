@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import BusinessCard from '@/components/BusinessCard.astro';
+import Icon from '@/components/Icon.astro';
 import { listBusinesses } from '@/data/businesses';
 import { listCategories } from '@/data/categories';
 
@@ -19,7 +20,7 @@ const categories = await listCategories();
   <section class="bg-ink-950 text-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12">
       <h1 class="font-display font-extrabold text-3xl sm:text-5xl tracking-tight">Directorio local</h1>
-      <p class="mt-2 text-slate-300" aria-live="polite" role="status"><span id="conteo">{businesses.length}</span> resultados · ordenados por relevancia y plan</p>
+      <p class="mt-2 text-slate-300" aria-live="polite" role="status"><span id="conteo">{businesses.length}</span> resultados · destacados primero</p>
 
       <form method="get" role="search" id="form-buscar" data-event="buscar" class="mt-6 bg-white rounded-2xl p-2 flex flex-col md:flex-row gap-2">
         <label class="sr-only" for="q">Buscar</label>
@@ -34,7 +35,7 @@ const categories = await listCategories();
           <option value="todas">Todas las categorías</option>
           {categories.map((c) => <option value={c.slug}>{c.name}</option>)}
         </select>
-        <button type="submit" class="px-6 py-3 rounded-xl bg-brand-600 font-bold hover:bg-brand-700">Filtrar</button>
+        <button type="submit" class="px-6 py-3 rounded-xl bg-brand-600 font-bold hover:bg-brand-700 active:scale-[0.98] transition inline-flex items-center justify-center gap-2"><Icon name="search" size={17} /> Filtrar</button>
       </form>
 
       <div class="mt-3 flex flex-wrap gap-2" aria-label="Filtros rápidos" id="filtros-rapidos">

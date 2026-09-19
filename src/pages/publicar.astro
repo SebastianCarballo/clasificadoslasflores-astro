@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import Icon from '@/components/Icon.astro';
 import { listCategories } from '@/data/categories';
 import { listPlans } from '@/data/plans';
 
@@ -101,8 +102,8 @@ const planElegido = plans.find((p) => p.tier === planInicial);
         <p class="mt-1 text-emerald-700">Te contactamos en menos de 24 hs para activar tu ficha. Podés cerrar esta página cuando quieras.</p>
       </div>
       <p id="form-error" role="alert" tabindex="-1" hidden class="text-sm font-semibold text-red-600 rounded-xl"></p>
-      <button type="submit" class="w-full px-6 py-4 rounded-xl bg-[#25D366] text-white font-bold hover:brightness-95 active:scale-[0.99] transition">
-        <span aria-hidden="true">💬</span> Enviar por WhatsApp y activar mi ficha
+      <button type="submit" class="w-full inline-flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-[#25D366] text-white font-bold hover:brightness-95 active:scale-[0.99] transition btn-sheen">
+        <Icon name="whatsapp" size={20} /> Enviar por WhatsApp y activar mi ficha
       </button>
       <p class="text-xs text-slate-500 text-center">Al enviar aceptás ser contactado por el equipo de Clasificados Las Flores.</p>
     </form>
