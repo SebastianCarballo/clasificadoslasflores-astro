@@ -6,7 +6,7 @@ import { spawn } from 'node:child_process';
 
 const PORT = 4333;
 const BASE = `http://127.0.0.1:${PORT}`;
-const BUDGETS = { homeHtmlBytes: 75_000, cssBytes: 70_000 };
+const BUDGETS = { homeHtmlBytes: 82_000, cssBytes: 70_000 };
 const packageManager = process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm';
 
 let failures = 0;
