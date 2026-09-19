@@ -51,3 +51,4 @@ pnpm verify      # check + smoke
 ## Siguiente paso
 
 Conectar `src/data/*` a un CMS (Sanity/Strapi/Supabase) o a Content Collections y agregar `astro:assets` + View Transitions.
+# clasificadoslasflores-astro
