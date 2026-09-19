@@ -1,0 +1,10 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "clasificados-las-flores": {
+      "type": "local",
+      "command": ["node", "mcp-server/server.mjs"],
+      "enabled": true
+    }
+  }
+}

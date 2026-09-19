@@ -1,0 +1,290 @@
+---
+import Icon from '@/components/Icon.astro';
+---
+
+<div id="asistente" class="contents">
+  <button
+    type="button"
+    id="asistente-btn"
+    aria-expanded="false"
+    aria-controls="asistente-panel"
+    aria-label="Abrir asistente virtual"
+    class="fixed z-[60] bottom-24 right-4 lg:bottom-6 lg:right-6 w-14 h-14 rounded-full bg-ink-950 text-white grid place-items-center shadow-2xl hover:scale-105 active:scale-95 transition-transform">
+    <span class="absolute -top-0.5 -right-0.5 flex w-3.5 h-3.5" aria-hidden="true">
+      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+      <span class="relative inline-flex rounded-full h-3.5 w-3.5 bg-emerald-400 border-2 border-white"></span>
+    </span>
+    <Icon name="whatsapp" size={26} />
+  </button>
+
+  <div
+    id="asistente-panel"
+    role="dialog"
+    aria-modal="false"
+    aria-label="Asistente virtual de Clasificados Las Flores"
+    hidden
+    class="fixed z-[60] inset-x-4 bottom-40 lg:inset-x-auto lg:right-6 lg:bottom-24 lg:w-[380px] bg-white rounded-3xl border border-ink-100 shadow-2xl overflow-hidden flex flex-col max-h-[62vh]">
+    <div class="bg-ink-950 text-white px-5 py-4 flex items-center gap-3">
+      <span class="w-10 h-10 rounded-2xl bg-gradient-to-br from-brand-500 to-indigo-500 grid place-items-center font-display font-bold shrink-0" aria-hidden="true">LF</span>
+      <div class="flex-1 leading-tight">
+        <p class="font-display font-bold text-[15px]">Asistente virtual</p>
+        <p class="text-xs text-emerald-300">● En línea · responde al instante</p>
+      </div>
+      <button type="button" id="asistente-cerrar" aria-label="Cerrar asistente" class="w-9 h-9 rounded-full hover:bg-white/10 grid place-items-center text-xl leading-none">×</button>
+    </div>
+
+    <div id="asistente-msgs" class="flex-1 overflow-y-auto px-4 py-4 space-y-3 text-sm" aria-live="polite"></div>
+
+    <div class="px-4 pb-2 flex flex-wrap gap-2" id="asistente-rapidos">
+      <button type="button" data-rapido="plomero urgente" class="px-3 py-2 rounded-full bg-ink-100 text-xs font-semibold hover:bg-ink-200 transition">🔧 Plomero urgente</button>
+      <button type="button" data-rapido="comida" class="px-3 py-2 rounded-full bg-ink-100 text-xs font-semibold hover:bg-ink-200 transition">🍕 Comida</button>
+      <button type="button" data-rapido="cuánto cuesta publicar" class="px-3 py-2 rounded-full bg-ink-100 text-xs font-semibold hover:bg-ink-200 transition">💰 Planes y precios</button>
+      <button type="button" data-rapido="quiero publicar mi negocio" class="px-3 py-2 rounded-full bg-ink-100 text-xs font-semibold hover:bg-ink-200 transition">📢 Publicar</button>
+    </div>
+
+    <form id="asistente-form" class="p-3 border-t border-ink-100 flex gap-2">
+      <label class="sr-only" for="asistente-input">Escribí tu pregunta</label>
+      <input
+        id="asistente-input"
+        type="text"
+        autocomplete="off"
+        enterkeyhint="send"
+        placeholder="Ej: busco electricista…"
+        class="flex-1 min-w-0 px-4 py-3 rounded-xl bg-ink-100 outline-none focus:ring-2 focus:ring-brand-500 text-sm"
+      />
+      <button type="submit" aria-label="Enviar pregunta" class="w-12 h-12 shrink-0 rounded-xl bg-brand-600 text-white grid place-items-center hover:bg-brand-700 active:scale-95 transition">
+        <Icon name="arrow-right" size={18} />
+      </button>
+    </form>
+  </div>
+
+  <script>
+    import { track } from '@/utils/analytics';
+
+    interface Negocio {
+      slug: string; nombre: string; categoria: string; resumen: string;
+      direccion: string; horarios: string; plan: string; rating: number;
+      verificado: boolean; wa: string | null; telefono: string;
+      haystack: string;
+    }
+
+    const ASESOR = '5492224000000';
+    // El índice vive en /bot-index.json (generado en build) y se pide solo al abrir.
+    let datos: { negocios: Negocio[]; categorias: { slug: string; nombre: string }[] } | null = null;
+    let cargando: Promise<void> | null = null;
+    function asegurarDatos(): Promise<void> {
+      if (datos) return Promise.resolve();
+      if (!cargando) {
+        cargando = fetch('/bot-index.json')
+          .then((r) => {
+            if (!r.ok) throw new Error('bot-index');
+            return r.json();
+          })
+          .then((j) => {
+            datos = j;
+          })
+          .catch(() => {
+            datos = { negocios: [], categorias: [] };
+          });
+      }
+      return cargando;
+    }
+    const PLAN_ORDEN: Record<string, number> = { oro: 0, plata: 1, bronce: 2, gratis: 3 };
+    const norm = (s: string): string => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+    const STOP = new Set('de la el en y a los las un una para con por qué que busco buscar necesito quiero hay tiene tienen algún alguna donde como cuál cuáles cuándo mi'.split(' '));
+
+    // El índice vive en /bot-index.json (generado en build) y se pide solo al abrir.
+    const panel = document.getElementById('asistente-panel');
+    const btn = document.getElementById('asistente-btn') as HTMLButtonElement | null;
+    const msgs = document.getElementById('asistente-msgs');
+    const form = document.getElementById('asistente-form') as HTMLFormElement | null;
+    const input = document.getElementById('asistente-input') as HTMLInputElement | null;
+    let saludado = false;
+
+    const waLink = (tel: string, texto: string): string =>
+      `https://wa.me/${tel}?text=${encodeURIComponent(texto)}`;
+
+    const esc = (s: string): string =>
+      s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+    function burbuja(de: 'bot' | 'yo', html: string): void {
+      if (!msgs) return;
+      const d = document.createElement('div');
+      d.className =
+        de === 'bot'
+          ? 'bg-ink-100 rounded-2xl rounded-tl-md px-4 py-3 leading-relaxed'
+          : 'bg-brand-600 text-white rounded-2xl rounded-tr-md px-4 py-3 ml-10 leading-relaxed';
+      d.innerHTML = html;
+      msgs.appendChild(d);
+      msgs.scrollTop = msgs.scrollHeight;
+    }
+
+    function tarjeta(n: Negocio): string {
+      const ficha = `/comercio/${n.slug}`;
+      const contacto = n.wa
+        ? `<a href="${waLink(n.wa, `Hola ${n.nombre}, vi tu perfil en Clasificados Las Flores y quiero consultar por…`)}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 mt-2 px-3 py-2 rounded-lg bg-[#25D366] text-white text-xs font-bold">WhatsApp directo</a>`
+        : `<a href="${ficha}" class="inline-flex items-center mt-2 px-3 py-2 rounded-lg bg-ink-900 text-white text-xs font-bold">Ver perfil</a>`;
+      return `<div class="mt-2 rounded-xl bg-white border border-ink-100 p-3">
+        <p class="font-bold"><a href="${ficha}" class="hover:underline">${n.nombre}</a>
+        ${n.verificado ? ' <span class="text-[10px] font-bold bg-ink-900 text-white px-1.5 py-0.5 rounded-full align-middle">✓</span>' : ''}</p>
+        <p class="text-xs text-slate-600 mt-0.5">${n.resumen}</p>
+        <p class="text-xs text-slate-500 mt-1">★ ${n.rating.toFixed(1)} · ${n.direccion}</p>
+        ${contacto}</div>`;
+    }
+
+    function lista(): Negocio[] {
+      return datos?.negocios ?? [];
+    }
+
+    function buscar(texto: string): Negocio[] {
+      const words = norm(texto).split(/\s+/).filter((w) => w.length > 2 && !STOP.has(w));
+      if (!words.length) return [];
+      return lista()
+        .map((n) => {
+          const hay = norm(n.haystack);
+          const score = words.filter((w) => hay.includes(w)).length;
+          return { n, score };
+        })
+        .filter((e) => e.score > 0)
+        .sort((a, b) => b.score - a.score || PLAN_ORDEN[a.n.plan] - PLAN_ORDEN[b.n.plan] || b.n.rating - a.n.rating)
+        .slice(0, 3)
+        .map((e) => e.n);
+    }
+
+    function mencionar(texto: string): Negocio | null {
+      const t = norm(texto);
+      return lista().find((n) => norm(n.nombre).split(/\s+/).some((w) => w.length > 4 && t.includes(w))) ?? null;
+    }
+
+    function responder(texto: string): void {
+      const t = norm(texto);
+
+      if (/^(hola|buenas|hey|holis|buen[oa]s (dias|tardes|noches)|que tal|saludos)\b/.test(t)) {
+        burbuja('bot', '¡Hola! 👋 Soy el asistente de <strong>Clasificados Las Flores</strong>. Puedo buscarte comercios y oficios, o contarte los planes para publicar tu negocio. ¿Qué necesitás?');
+        track('bot_pregunta', { intent: 'saludo' });
+        return;
+      }
+      if (/gracias/.test(t)) {
+        burbuja('bot', '¡De nada! 😊 Si necesitás algo más, acá estoy. Y si preferís hablar con una persona: ' + asesorBtn());
+        track('bot_pregunta', { intent: 'gracias' });
+        return;
+      }
+      if (/publicar|mi negocio|mi local|mi comercio|emprendimiento|anunciar|pauta|vender (mi|mis)|sumar (mi|un)/.test(t)) {
+        burbuja(
+          'bot',
+          '¡Buenísimo! Publicar es gratis y tarda 2 minutos. Los planes:<br>🆓 <strong>Gratis $0</strong> · 🥉 <strong>Bronce $5.000/mes</strong> con WhatsApp directo · 🥈 <strong>Plata $12.000/mes</strong> con badge Verificado · 🥇 <strong>Oro $25.000/mes</strong> destacado en home.<br><a href="/planes" class="font-bold text-brand-700 underline">Ver planes</a> · <a href="/publicar" class="font-bold text-brand-700 underline">Publicar ahora</a>',
+        );
+        track('bot_pregunta', { intent: 'publicar' });
+        return;
+      }
+      if (/plan|precio|costo|cuesta|vale|tarifa/.test(t)) {
+        burbuja(
+          'bot',
+          'Tenemos 4 planes: <strong>Gratis $0</strong>, <strong>Bronce $5.000/mes</strong> (WhatsApp directo, ideal oficios), <strong>Plata $12.000/mes</strong> (verificado + mapa + catálogo) y <strong>Oro $25.000/mes</strong> (máxima visibilidad). <a href="/planes" class="font-bold text-brand-700 underline">Compararlos acá</a>',
+        );
+        track('bot_pregunta', { intent: 'planes' });
+        return;
+      }
+      if (/categor/.test(t)) {
+        const listaCats = (datos?.categorias ?? []).map((c) => `<a href="/categoria/${c.slug}" class="font-semibold text-brand-700 underline">${c.nombre}</a>`).join(' · ');
+        burbuja('bot', `Trabajamos estas categorías: ${listaCats || '…cargando'}. ¿Cuál te interesa?`);
+        track('bot_pregunta', { intent: 'categorias' });
+        return;
+      }
+
+      const m = mencionar(texto);
+      if (m && /horario|hora|abre|cierra|atiende/.test(t)) {
+        burbuja('bot', `<strong>${m.nombre}</strong> atiende: ${m.horarios}. 📍 ${m.direccion}`);
+        track('bot_pregunta', { intent: 'horarios' });
+        return;
+      }
+      if (m && /direcci|donde queda|ubicaci|como llego/.test(t)) {
+        burbuja('bot', `<strong>${m.nombre}</strong> está en ${m.direccion}. <a href="/comercio/${m.slug}" class="font-bold text-brand-700 underline">Ver ficha y mapa</a>`);
+        track('bot_pregunta', { intent: 'direccion' });
+        return;
+      }
+      if (m && /telefono|llamar|whatsapp|contacto|contactar|hablar|numero|escrib/.test(t)) {
+        burbuja(
+          'bot',
+          m.wa
+            ? `Hablá directo con <strong>${m.nombre}</strong>: <a href="${waLink(m.wa, `Hola ${m.nombre}, vi tu perfil en Clasificados Las Flores y quiero consultar por…`)}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center mt-1 px-3 py-2 rounded-lg bg-[#25D366] text-white text-xs font-bold">WhatsApp directo</a>`
+            : `<strong>${m.nombre}</strong> no tiene WhatsApp directo. Llamalo al <a href="tel:+${m.telefono}" class="font-bold text-brand-700">+${m.telefono}</a> o <a href="/comercio/${m.slug}" class="font-bold text-brand-700 underline">mirá su ficha</a>`,
+        );
+        track('bot_pregunta', { intent: 'contacto_negocio' });
+        return;
+      }
+      if (/telefono|whatsapp general|asesor|humano|persona|ayuda/.test(t) && !m) {
+        burbuja('bot', `Hablá con nuestro equipo: ${asesorBtn()}`);
+        track('bot_pregunta', { intent: 'asesor' });
+        return;
+      }
+
+      const res = buscar(texto);
+      if (res.length) {
+        burbuja('bot', `Encontré esto para vos 👇${res.map(tarjeta).join('')}<p class="mt-2"><a href="/directorio" class="font-bold text-brand-700 underline">Ver directorio completo</a></p>`);
+        track('bot_pregunta', { intent: 'buscar_ok' });
+        return;
+      }
+      burbuja(
+        'bot',
+        `Mmm, no encontré eso en el directorio 😕 Probá con otra palabra (ej: <em>plomero, pizza, alquiler, farmacia</em>) o hablá con nuestro equipo: ${asesorBtn()}`,
+      );
+      track('bot_pregunta', { intent: 'buscar_vacio' });
+    }
+
+    function asesorBtn(): string {
+      return `<a href="${waLink(ASESOR, 'Hola, vengo del asistente virtual y necesito ayuda')}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center mt-1 px-3 py-2 rounded-lg bg-[#25D366] text-white text-xs font-bold">WhatsApp del equipo</a>`;
+    }
+
+    function abrir(): void {
+      if (!panel || !btn) return;
+      panel.hidden = false;
+      btn.setAttribute('aria-expanded', 'true');
+      btn.setAttribute('aria-label', 'Cerrar asistente virtual');
+      track('bot_open', {});
+      void asegurarDatos(); // precarga el índice mientras saluda
+      if (!saludado) {
+        saludado = true;
+        const espera = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ? 0 : 350;
+        setTimeout(() => responder('hola'), espera);
+      }
+      input?.focus();
+    }
+
+    function cerrarPanel(): void {
+      if (!panel || !btn) return;
+      panel.hidden = true;
+      btn.setAttribute('aria-expanded', 'false');
+      btn.setAttribute('aria-label', 'Abrir asistente virtual');
+      btn.focus();
+    }
+
+    btn?.addEventListener('click', () => (panel?.hidden ? abrir() : cerrarPanel()));
+    document.getElementById('asistente-cerrar')?.addEventListener('click', cerrarPanel);
+    document.addEventListener('keydown', (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && panel && !panel.hidden) cerrarPanel();
+    });
+    // Las respuestas con datos esperan al índice; el saludo no lo necesita.
+    function preguntar(q: string): void {
+      burbuja('yo', esc(q));
+      void asegurarDatos().then(() => {
+        setTimeout(() => responder(q), 200);
+      });
+    }
+
+    document.querySelectorAll('#asistente-rapidos [data-rapido]').forEach((b) => {
+      b.addEventListener('click', () => {
+        const q = (b as HTMLElement).dataset.rapido ?? '';
+        if (panel?.hidden) abrir();
+        preguntar(q);
+      });
+    });
+    form?.addEventListener('submit', (e: Event) => {
+      e.preventDefault();
+      const q = input?.value.trim() ?? '';
+      if (!q) return;
+      if (input) input.value = '';
+      preguntar(q);
+    });
+  </script>
+</div>

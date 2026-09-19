@@ -1,0 +1,13 @@
+{
+  "name": "mcp-clasificados-las-flores",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "MCP server: expone el directorio de Clasificados Las Flores como tools (negocios, categorías, planes)",
+  "scripts": {
+    "start": "node server.mjs"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.0"
+  }
+}

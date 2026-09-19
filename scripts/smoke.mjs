@@ -6,7 +6,7 @@ import { spawn } from 'node:child_process';
 
 const PORT = 4333;
 const BASE = `http://127.0.0.1:${PORT}`;
-const BUDGETS = { homeHtmlBytes: 82_000, cssBytes: 70_000 };
+const BUDGETS = { homeHtmlBytes: 84_000, cssBytes: 70_000 };
 const packageManager = process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm';
 
 let failures = 0;
@@ -18,7 +18,7 @@ function check(name, ok, detail = '') {
 async function get(path) {
   const res = await fetch(BASE + path);
   const ct = res.headers.get('content-type') ?? '';
-  const text = /html|xml|text|svg/.test(ct) ? await res.text() : '';
+  const text = /html|xml|text|svg|json/.test(ct) ? await res.text() : '';
   return { status: res.status, text, headers: res.headers };
 }
 
@@ -70,6 +70,9 @@ try {
   check('home prueba social real', home.text.includes('promedio en') && home.text.includes('verificados'));
   check('home motion system', home.text.includes('data-reveal-group') && home.text.includes('float-soft'));
   check('home iconos SVG marca', home.text.includes('icon-whatsapp') || home.text.includes('icon-search'));
+  check('asistente virtual presente', home.text.includes('id="asistente-panel"') && home.text.includes('data-rapido'));
+  const botIdx = await get('/bot-index.json');
+  check('bot-index.json con negocios', botIdx.status === 200 && botIdx.text.includes('plomero-juan-perez'));
   check('home microcopy anti-riesgo', home.text.includes('Sin tarjeta'));
   check('home copy honesto', home.text.includes('Comercios destacados') && !home.text.includes('de la semana'));
   check('home cómo funciona rediseñado', home.text.includes('De la búsqueda al WhatsApp') && home.text.includes('steps-line'));

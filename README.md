@@ -23,8 +23,23 @@ src/
     categoria/[slug].astro
     planes.astro / publicar.astro / contacto.astro / nosotros.astro / 404.astro
     sitemap.xml.ts      # Generado desde collections
-scripts/smoke.mjs       # 24 smoke tests + budgets (cero dependencias)
+scripts/smoke.mjs       # 30+ smoke tests + budgets (cero dependencias)
+mcp-server/             # MCP server (stdio): buscar_negocios, ver_negocio, listar_categorias, ver_planes
+.opencode/agent/asistente-clasificados.md  # Agente del negocio (usa el MCP)
+opencode.json           # Registra el MCP en opencode (reiniciar sesión para activar)
 public/robots.txt, favicon.svg, og-cover.svg
+```
+
+## Agente + bot + WhatsApp
+
+- **MCP server:** `mcp-server/server.mjs` lee `src/content/*.json` y expone 4 tools.
+  Probar: `cd mcp-server && npm install && node test.mjs`.
+- **Agente:** `.opencode/agent/asistente-clasificados.md` — responde como el negocio
+  (voseo, ranking por plan, derivación a WhatsApp). Requiere reiniciar opencode.
+- **Bot web:** `src/components/Asistente.astro` (en todas las páginas vía `BaseLayout`).
+  Sin IA externa ni costo: busca en `/bot-index.json` (generado en build, se pide
+  solo al abrir), explica planes con precios, recomienda Oro primero y deriva a
+  WhatsApp con mensaje prediseñado. Eventos: `bot_open`, `bot_pregunta`.
 ```
 
 ## Buenas prácticas aplicadas

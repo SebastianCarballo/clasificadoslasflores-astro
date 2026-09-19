@@ -1,0 +1,1 @@
+import{t as s}from"./analytics.D8RjyfK0.js";document.addEventListener("click",e=>{const t=e.target.closest?.("[data-event]");if(!t)return;let a={};try{a=JSON.parse(t.dataset.props??"{}")}catch{a={}}s(t.dataset.event??"click",a)});document.addEventListener("submit",e=>{const t=e.target;t?.dataset?.event&&s(t.dataset.event,{form:t.id||"sin-id"})});
