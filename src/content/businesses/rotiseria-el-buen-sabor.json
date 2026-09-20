@@ -8,18 +8,41 @@
   "whatsapp": "5492224421234",
   "hasWhatsAppButton": true,
   "hours": "Lun a Dom 11:30–14:30 / 19:30–23:30",
-  "image": "https://images.unsplash.com/photo-1544025162-d76694265947?w=800&q=80&auto=format&fit=crop",
+  "image": "rotiseria-el-buen-sabor-0.jpg",
   "gallery": [
-    "https://images.unsplash.com/photo-1544025162-d76694265947?w=800&q=80&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800&q=80&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&q=80&auto=format&fit=crop"
+    "rotiseria-el-buen-sabor-0.jpg",
+    "rotiseria-el-buen-sabor-1.jpg",
+    "rotiseria-el-buen-sabor-2.jpg"
   ],
   "verified": true,
   "featured": true,
   "plan": "oro",
   "rating": 4.8,
   "reviewsCount": 214,
-  "tags": ["delivery", "menu del día", "empanadas", "pizza"],
+  "tags": [
+    "delivery",
+    "menu del día",
+    "empanadas",
+    "pizza"
+  ],
+  "catalogo": [
+    {
+      "nombre": "Menú del día",
+      "precio": "$6.000"
+    },
+    {
+      "nombre": "Pizza de muzzarella",
+      "precio": "$7.500"
+    },
+    {
+      "nombre": "Milanesa napolitana",
+      "precio": "$8.500"
+    },
+    {
+      "nombre": "Docena de empanadas",
+      "precio": "$9.000"
+    }
+  ],
   "latitude": -36.0172,
   "longitude": -59.1,
   "instagram": "https://instagram.com",

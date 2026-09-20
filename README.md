@@ -50,6 +50,9 @@ public/robots.txt, favicon.svg, og-cover.svg
 - **Mobile-first + responsive**, cards con jerarquía Oro > Plata > Bronce > Gratis.
 - **CRO WhatsApp:** mensaje prediseñado `wa.me` en cada ficha con plan habilitado.
 - **TypeScript strict** con alias `@/*`.
+- **Imágenes:** vendorizadas en `src/assets/negocios` (fuente HD) + `astro:assets`
+  (responsive webp + fallback jpg, metadata tipada, cero CLS). Re-vendorizar:
+  `node scripts/vendor-images.mjs`.
 
 ## Comandos
 

@@ -46,19 +46,22 @@ export function normalizeText(value: string): string {
     .replace(/[\u0300-\u036f]/g, '');
 }
 
+import type { ImageMetadata } from 'astro';
+
 export function localBusinessSchema(b: {
   slug?: string;
   name: string;
   description: string;
   address: string;
   phone: string;
-  image: string;
+  image: ImageMetadata | string;
   rating: number;
   reviewsCount: number;
   latitude?: number;
   longitude?: number;
 }) {
   const base = SITE.url;
+  const img = typeof b.image === 'string' ? b.image : b.image.src;
   return {
     '@context': 'https://schema.org',
     '@type': 'LocalBusiness',
@@ -73,7 +76,7 @@ export function localBusinessSchema(b: {
       addressCountry: 'AR',
     },
     telephone: `+${b.phone}`,
-    image: [b.image.startsWith('http') ? b.image : `${base}${b.image.startsWith('/') ? '' : '/'}${b.image}`],
+    image: [img.startsWith('http') ? img : `${base}${img.startsWith('/') ? '' : '/'}${img}`],
     areaServed: {
       '@type': 'City',
       name: 'Las Flores',

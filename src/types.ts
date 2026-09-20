@@ -1,3 +1,5 @@
+import type { ImageMetadata } from 'astro';
+
 export type PlanTier = 'gratis' | 'bronce' | 'plata' | 'oro';
 
 export type CategorySlug =
@@ -21,14 +23,15 @@ export interface Business {
   whatsapp?: string;
   hasWhatsAppButton: boolean;
   hours: string;
-  image: string;
-  gallery: string[];
+  image: ImageMetadata;
+  gallery: ImageMetadata[];
   verified: boolean;
   featured: boolean;
   plan: PlanTier;
   rating: number;
   reviewsCount: number;
   tags: string[];
+  catalogo?: { nombre: string; precio: string }[];
   latitude?: number;
   longitude?: number;
   instagram?: string;

@@ -55,13 +55,16 @@
         },
         "image": {
           "type": "string",
-          "format": "uri"
+          "pattern": "\\.(jpe?g|png|webp)$",
+          "errorMessage": {
+            "pattern": "Archivo local en src/assets/negocios"
+          }
         },
         "gallery": {
           "type": "array",
           "items": {
             "type": "string",
-            "format": "uri"
+            "pattern": "\\.(jpe?g|png|webp)$"
           },
           "minItems": 1
         },
@@ -97,6 +100,27 @@
             "type": "string"
           },
           "default": []
+        },
+        "catalogo": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "nombre": {
+                "type": "string",
+                "minLength": 2
+              },
+              "precio": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "nombre",
+              "precio"
+            ],
+            "additionalProperties": false
+          }
         },
         "latitude": {
           "type": "number",

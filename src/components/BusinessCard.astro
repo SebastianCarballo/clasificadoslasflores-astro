@@ -26,7 +26,6 @@ const isOro = b.plan === 'oro';
     <Image
       src={b.image}
       alt={b.name}
-      inferSize
       widths={[400, 800]}
       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
       loading="lazy"
@@ -37,7 +36,7 @@ const isOro = b.plan === 'oro';
       {b.plan === 'oro' && (
         <span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-gradient-to-r from-amber-400 to-yellow-500 text-ink-950 shadow">★ ORO</span>
       )}
-      {b.verified && (
+      {b.verified && (b.plan === 'plata' || b.plan === 'oro') && (
         <span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-ink-950/85 text-white backdrop-blur">✓ Verificado</span>
       )}
     </div>
@@ -59,7 +58,8 @@ const isOro = b.plan === 'oro';
     <p class="mt-2 text-xs text-slate-500"><span aria-hidden="true">📍</span> {b.address}</p>
 
     <div class="mt-4 pt-4 border-t border-ink-100 flex gap-2 mt-auto">
-      {b.hasWhatsAppButton && b.whatsapp ? (
+      {/* Botón WhatsApp: solo planes pagos con número configurado (Gratis: ver perfil) */}
+      {b.hasWhatsAppButton && b.whatsapp && b.plan !== 'gratis' ? (
         <a
           href={whatsappLink(b.whatsapp, b.name)}
           target="_blank"

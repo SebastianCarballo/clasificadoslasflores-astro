@@ -7,15 +7,19 @@
   "phone": "5492224334455",
   "hasWhatsAppButton": false,
   "hours": "Lun a Vie 8–18hs",
-  "image": "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=800&q=80&auto=format&fit=crop",
+  "image": "taller-mecanico-el-rayo-0.jpg",
   "gallery": [
-    "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=800&q=80&auto=format&fit=crop"
+    "taller-mecanico-el-rayo-0.jpg"
   ],
   "verified": false,
   "featured": false,
   "plan": "gratis",
   "rating": 4.4,
   "reviewsCount": 41,
-  "tags": ["mecánica", "frenos", "service"],
+  "tags": [
+    "mecánica",
+    "frenos",
+    "service"
+  ],
   "createdAt": "2026-04-10"
 }

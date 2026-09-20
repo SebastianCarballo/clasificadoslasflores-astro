@@ -8,15 +8,19 @@
   "whatsapp": "5492224376543",
   "hasWhatsAppButton": true,
   "hours": "Lun a Sáb 8–20hs",
-  "image": "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=800&q=80&auto=format&fit=crop",
+  "image": "electricista-mario-lopez-0.jpg",
   "gallery": [
-    "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=800&q=80&auto=format&fit=crop"
+    "electricista-mario-lopez-0.jpg"
   ],
-  "verified": true,
+  "verified": false,
   "featured": false,
   "plan": "bronce",
   "rating": 4.8,
   "reviewsCount": 63,
-  "tags": ["electricidad", "tableros", "led"],
+  "tags": [
+    "electricidad",
+    "tableros",
+    "led"
+  ],
   "createdAt": "2026-05-02"
 }

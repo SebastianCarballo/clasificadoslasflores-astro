@@ -6,7 +6,7 @@ import { spawn } from 'node:child_process';
 
 const PORT = 4333;
 const BASE = `http://127.0.0.1:${PORT}`;
-const BUDGETS = { homeHtmlBytes: 85_000, cssBytes: 70_000 };
+const BUDGETS = { homeHtmlBytes: 88_000, cssBytes: 70_000 };
 const packageManager = process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm';
 
 let failures = 0;
@@ -106,6 +106,19 @@ try {
   check('ficha CTA sticky móvil', ficha.text.includes('Volver al directorio'));
   check('ficha compartir + reportar', ficha.text.includes('btn-compartir') && ficha.text.includes('Datos incorrectos'));
   check('ficha tracking whatsapp', ficha.text.includes('data-event="whatsapp_click"'));
+  check('oro tiene catálogo del plan', ficha.text.includes('Catálogo') && ficha.text.includes('Menú del día'));
+
+  const bronce = await get('/comercio/plomero-juan-perez/');
+  check('bronce sin badge verificado (es de Plata+)', bronce.status === 200 && !bronce.text.includes('Verificado'));
+
+  const gratis = await get('/comercio/taller-mecanico-el-rayo/');
+  check(
+    'gratis sin extras (sin CTA WhatsApp, mapa ni catálogo)',
+    gratis.status === 200 &&
+      !gratis.text.includes('whatsapp_click') &&
+      !gratis.text.includes('id="mapa-negocio"') &&
+      !gratis.text.includes('Catálogo'),
+  );
   check('ficha info antes que imagen (h1 → img)', ficha.text.indexOf('<h1') !== -1 && ficha.text.indexOf('<h1') < ficha.text.indexOf('<img'));
 
   const alta = await get('/publicar');

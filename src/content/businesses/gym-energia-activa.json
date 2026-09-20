@@ -7,15 +7,19 @@
   "phone": "5492224412345",
   "hasWhatsAppButton": false,
   "hours": "Lun a Vie 7–22hs · Sáb 9–13hs",
-  "image": "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&q=80&auto=format&fit=crop",
+  "image": "gym-energia-activa-0.jpg",
   "gallery": [
-    "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&q=80&auto=format&fit=crop"
+    "gym-energia-activa-0.jpg"
   ],
   "verified": false,
   "featured": false,
   "plan": "gratis",
   "rating": 4.5,
   "reviewsCount": 52,
-  "tags": ["gym", "funcional", "spinning"],
+  "tags": [
+    "gym",
+    "funcional",
+    "spinning"
+  ],
   "createdAt": "2026-06-01"
 }

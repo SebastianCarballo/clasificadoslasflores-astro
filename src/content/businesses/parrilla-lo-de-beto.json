@@ -1,0 +1,45 @@
+{
+  "name": "Parrilla Lo de Beto",
+  "category": "gastronomia",
+  "description": "Parrilla tradicional frente a la plaza. Asado, vacío y achuras a la leña, con ensaladas de la huerta. Salón familiar y delivery. Reservas por WhatsApp.",
+  "shortDescription": "Asado a la leña frente a la plaza.",
+  "address": "Plaza Mitre 12, Las Flores",
+  "phone": "5492224434560",
+  "whatsapp": "5492224434560",
+  "hasWhatsAppButton": true,
+  "hours": "Mar a Dom 12–15 / 20–00hs",
+  "image": "parrilla-lo-de-beto-0.jpg",
+  "gallery": [
+    "parrilla-lo-de-beto-0.jpg",
+    "parrilla-lo-de-beto-1.jpg"
+  ],
+  "verified": true,
+  "featured": true,
+  "plan": "oro",
+  "rating": 4.9,
+  "reviewsCount": 287,
+  "tags": [
+    "parrilla",
+    "asado",
+    "delivery"
+  ],
+  "latitude": -36.019,
+  "longitude": -59.1,
+  "instagram": "https://instagram.com",
+  "facebook": "https://facebook.com",
+  "catalogo": [
+    {
+      "nombre": "Asado para dos",
+      "precio": "$9.500"
+    },
+    {
+      "nombre": "Vacío a la leña",
+      "precio": "$11.000"
+    },
+    {
+      "nombre": "Choripán",
+      "precio": "$3.000"
+    }
+  ],
+  "createdAt": "2026-08-23"
+}

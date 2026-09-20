@@ -1,23 +1,39 @@
 import { getCollection } from 'astro:content';
+import type { ImageMetadata } from 'astro';
 import type { Business, CategorySlug, PlanTier } from '@/types';
 import { normalizeText } from '@/utils/site';
 
 // Capa de acceso a datos sobre Content Collections (validado con zod en build).
 // Un negocio/categoría/plan nuevo = un archivo JSON en src/content. Sin tocar código.
 
-function toBusiness(id: string, data: Omit<Business, 'slug'>): Business {
-  return { ...data, slug: id };
+// Assets locales: el JSON guarda el nombre de archivo, acá se resuelve a metadata
+// (dimensiones reales → cero CLS, optimización con sharp en build).
+const assetImages = import.meta.glob<{ default: ImageMetadata }>(
+  '/src/assets/negocios/*.{jpg,jpeg,png,webp}',
+  { eager: true },
+);
+
+function img(file: string): ImageMetadata {
+  const mod = assetImages[`/src/assets/negocios/${file}`];
+  if (!mod) throw new Error(`Falta imagen local en src/assets/negocios: ${file}`);
+  return mod.default;
+}
+
+type BusinessRaw = Omit<Business, 'slug' | 'image' | 'gallery'> & { image: string; gallery: string[] };
+
+function toBusiness(id: string, data: BusinessRaw): Business {
+  return { ...data, slug: id, image: img(data.image), gallery: data.gallery.map(img) };
 }
 
 export async function listBusinesses(): Promise<Business[]> {
   const entries = await getCollection('businesses');
-  return entries.map((e) => toBusiness(e.id, e.data as Omit<Business, 'slug'>));
+  return entries.map((e) => toBusiness(e.id, e.data as BusinessRaw));
 }
 
 export async function getBusiness(slug: string): Promise<Business | undefined> {
   const entries = await getCollection('businesses');
   const found = entries.find((e) => e.id === slug);
-  return found ? toBusiness(found.id, found.data as Omit<Business, 'slug'>) : undefined;
+  return found ? toBusiness(found.id, found.data as BusinessRaw) : undefined;
 }
 
 export async function getRelated(businessSlug: string, limit = 3): Promise<Business[]> {

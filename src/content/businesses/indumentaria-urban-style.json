@@ -8,17 +8,38 @@
   "whatsapp": "5492224487654",
   "hasWhatsAppButton": true,
   "hours": "Lun a Sáb 9–13 / 16–20:30",
-  "image": "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&q=80&auto=format&fit=crop",
+  "image": "indumentaria-urban-style-0.jpg",
   "gallery": [
-    "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&q=80&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1445205170230-053b83016050?w=800&q=80&auto=format&fit=crop"
+    "indumentaria-urban-style-0.jpg",
+    "indumentaria-urban-style-1.jpg",
+    "indumentaria-urban-style-2.jpg"
   ],
   "verified": true,
   "featured": true,
   "plan": "plata",
   "rating": 4.7,
   "reviewsCount": 156,
-  "tags": ["ropa", "deporte", "ofertas"],
+  "tags": [
+    "ropa",
+    "deporte",
+    "ofertas"
+  ],
+  "latitude": -36.0181,
+  "longitude": -59.0992,
+  "catalogo": [
+    {
+      "nombre": "Remera básica",
+      "precio": "$9.999"
+    },
+    {
+      "nombre": "Jean clásico",
+      "precio": "$24.999"
+    },
+    {
+      "nombre": "Campera urbana",
+      "precio": "$39.999"
+    }
+  ],
   "instagram": "https://instagram.com",
   "createdAt": "2026-01-28"
 }
