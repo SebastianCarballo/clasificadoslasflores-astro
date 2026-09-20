@@ -68,6 +68,16 @@ pnpm design:lint # valida tokens y contraste WCAG de DESIGN.md
 pnpm design:export # exporta tokens al formato @theme de Tailwind 4
 ```
 
+## Librerías (solo las que pagan su peso)
+
+- **Reveals con IntersectionObserver propio + CSS** (cero deps, con fallbacks
+  sin-JS y sin-IO: el contenido nunca queda oculto).
+- **@formkit/auto-animate** — FLIP al filtrar el directorio (solo esa página).
+- Rechazadas con criterio: motion (55 KB por un reveal que el IO nativo resuelve),
+  shadcn/daisyUI (runtime React + pelean con el design system), swiper (el
+  scroll-snap nativo ya gana), pagefind (rompería el ranking por plan), lenis
+  (riesgo de accesibilidad).
+
 ## Sistema visual
 
 `DESIGN.md` es la fuente de verdad visual para agentes de código y futuras

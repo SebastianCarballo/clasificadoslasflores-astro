@@ -4,6 +4,7 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
   site: 'https://clasificadoslasflores.com.ar',
   output: 'static',
+  devToolbar: { enabled: false },
   vite: {
     plugins: [tailwindcss()],
   },

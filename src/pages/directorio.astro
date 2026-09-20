@@ -72,6 +72,7 @@ const categories = await listCategories();
 
     <script type="application/json" id="businesses-index" set:html={JSON.stringify(businesses.map(b => ({ slug: b.slug, category: b.category, haystack: `${b.name} ${b.shortDescription} ${b.description} ${b.tags.join(' ')} ${b.address}` })))} />
     <script>
+      import autoAnimate from '@formkit/auto-animate';
       const norm = (s: string): string => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
       const params = new URLSearchParams(location.search);
       const input = document.getElementById('q') as HTMLInputElement | null;
@@ -88,21 +89,26 @@ const categories = await listCategories();
       const ACTIVE = ['px-4','py-2.5','rounded-full','text-xs','font-semibold','border','bg-white','text-ink-900'];
       const IDLE = ['px-4','py-2.5','rounded-full','text-xs','font-semibold','border','bg-white/10','border-white/15','text-white'];
 
+      // Orden canónico capturado una vez (las filtradas salen del DOM y deben volver)
+      const todas: Element[] = grid ? Array.from(grid.querySelectorAll('[data-business-card]')) : [];
+      if (grid) autoAnimate(grid);
+
       function apply(cat: string, qRaw: string, { push = false }: { push?: boolean } = {}) {
         const q = norm((qRaw ?? '').trim());
-        const words = q ? q.split(/\s+/) : [];
-        let visible = 0;
-        grid?.querySelectorAll('[data-business-card]').forEach((card) => {
+        const words = q ? q.split(/\s+/).filter((w) => w.length > 0) : [];
+        const visibles: Element[] = [];
+        todas.forEach((card) => {
           const el = card as HTMLElement;
           const slug = el.getAttribute('data-slug') ?? '';
           const entry = bySlug.get(slug);
           const okCat = !cat || cat === 'todas' || entry?.category === cat;
           const hay = norm(entry?.haystack ?? el.textContent ?? '');
           const okQ = words.length === 0 || words.every((w: string) => hay.includes(w));
-          const show = okCat && okQ;
-          el.style.display = show ? '' : 'none';
-          if (show) visible++;
+          if (okCat && okQ) visibles.push(card);
         });
+        // Reinsertar solo visibles: mutación de childList → auto-animate hace FLIP
+        if (grid) grid.replaceChildren(...visibles);
+        const visible = visibles.length;
         if (conteo) conteo.textContent = String(visible);
         if (empty) empty.hidden = visible !== 0;
         if (grid) grid.style.display = visible === 0 ? 'none' : '';

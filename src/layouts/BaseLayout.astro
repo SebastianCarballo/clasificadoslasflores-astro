@@ -55,6 +55,12 @@ const imageUrl = image.startsWith('http') ? image : `${SITE.url}${image}`;
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
     {/* Fuentes self-hosted vía fontsource (ver src/styles/global.css). Sin terceros bloqueantes. */}
+    {/* Sin JS: los reveals nunca deben ocultar contenido */}
+    <noscript>
+      <style>
+        [data-reveal], [data-reveal-group] > * { opacity: 1 !important; transform: none !important; }
+      </style>
+    </noscript>
     <script is:inline>document.documentElement.classList.add('js');</script>
 
     {schema && <script type="application/ld+json" set:html={JSON.stringify(schema)} />}
@@ -71,24 +77,30 @@ const imageUrl = image.startsWith('http') ? image : `${SITE.url}${image}`;
     <Footer />
     <Asistente />
     <script>
-      // Reveal on scroll con stagger + sombra del header (motion respeta reduced-motion vía CSS)
-      const io = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (!entry.isIntersecting) return;
-            const el = entry.target as HTMLElement;
-            el.classList.add('in');
-            if (el.hasAttribute('data-reveal-group')) {
-              Array.from(el.children).forEach((child, i) => {
-                (child as HTMLElement).style.transitionDelay = `${Math.min(i, 8) * 70}ms`;
-              });
-            }
-            io.unobserve(el);
-          });
-        },
-        { threshold: 0.12, rootMargin: '0px 0px -8% 0px' },
-      );
-      document.querySelectorAll('[data-reveal], [data-reveal-group]').forEach((el) => io.observe(el));
+      // Reveal on scroll: IntersectionObserver nativo + transiciones CSS.
+      // A prueba de balas: si no hay IO, todo visible. Sin JS, el CSS nunca oculta.
+      const targets = document.querySelectorAll('[data-reveal], [data-reveal-group]');
+      if (!('IntersectionObserver' in window)) {
+        targets.forEach((el) => el.classList.add('in'));
+      } else {
+        const io = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (!entry.isIntersecting) return;
+              const el = entry.target as HTMLElement;
+              el.classList.add('in');
+              if (el.hasAttribute('data-reveal-group')) {
+                Array.from(el.children).forEach((child, i) => {
+                  (child as HTMLElement).style.transitionDelay = `${Math.min(i, 8) * 70}ms`;
+                });
+              }
+              io.unobserve(el);
+            });
+          },
+          { threshold: 0.12, rootMargin: '0px 0px -8% 0px' },
+        );
+        targets.forEach((el) => io.observe(el));
+      }
 
       const header = document.getElementById('site-header');
       const onScroll = () => header?.classList.toggle('scrolled', window.scrollY > 8);
