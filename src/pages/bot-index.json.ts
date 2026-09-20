@@ -18,6 +18,7 @@ export async function GET() {
     verificado: b.verified,
     wa: b.hasWhatsAppButton ? (b.whatsapp ?? null) : null,
     telefono: b.phone,
+    ...(b.catalogo && b.catalogo.length > 0 && { catalogo: b.catalogo }),
     haystack: `${b.name} ${b.shortDescription} ${b.description} ${b.tags.join(' ')} ${b.address}`,
   }));
   const body = JSON.stringify({

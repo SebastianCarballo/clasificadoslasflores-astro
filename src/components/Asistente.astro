@@ -27,7 +27,7 @@ import Icon from '@/components/Icon.astro';
     <div class="bg-ink-950 text-white px-5 py-4 flex items-center gap-3">
       <span class="w-10 h-10 rounded-2xl bg-gradient-to-br from-brand-500 to-indigo-500 grid place-items-center font-display font-bold shrink-0" aria-hidden="true">LF</span>
       <div class="flex-1 leading-tight">
-        <p class="font-display font-bold text-[15px]">Asistente virtual</p>
+        <p class="font-display font-bold text-[15px]">Flor 🌸 · Asistente virtual</p>
         <p class="text-xs text-emerald-300">● En línea · responde al instante</p>
       </div>
       <button type="button" id="asistente-cerrar" aria-label="Cerrar asistente" class="w-9 h-9 rounded-full hover:bg-white/10 grid place-items-center text-xl leading-none">×</button>
@@ -65,7 +65,7 @@ import Icon from '@/components/Icon.astro';
       slug: string; nombre: string; categoria: string; resumen: string;
       direccion: string; horarios: string; plan: string; rating: number;
       verificado: boolean; wa: string | null; telefono: string;
-      haystack: string;
+      haystack: string; catalogo?: { nombre: string; precio: string }[];
     }
 
     const ASESOR = '5492224000000';
@@ -136,19 +136,31 @@ import Icon from '@/components/Icon.astro';
       return datos?.negocios ?? [];
     }
 
+    // Singularización ingenua para que "plomeros" matchee "plomero", "pizzas" → "pizza".
+    function variantes(w: string): string[] {
+      const out = [w];
+      if (w.endsWith('es') && w.length > 4) out.push(w.slice(0, -2));
+      else if (w.endsWith('s') && w.length > 3) out.push(w.slice(0, -1));
+      return out;
+    }
+
     function buscar(texto: string): Negocio[] {
       const words = norm(texto).split(/\s+/).filter((w) => w.length > 2 && !STOP.has(w));
       if (!words.length) return [];
       return lista()
         .map((n) => {
           const hay = norm(n.haystack);
-          const score = words.filter((w) => hay.includes(w)).length;
+          const score = words.filter((w) => variantes(w).some((v) => hay.includes(v))).length;
           return { n, score };
         })
         .filter((e) => e.score > 0)
         .sort((a, b) => b.score - a.score || PLAN_ORDEN[a.n.plan] - PLAN_ORDEN[b.n.plan] || b.n.rating - a.n.rating)
         .slice(0, 3)
         .map((e) => e.n);
+    }
+
+    function topValorados(n = 2): Negocio[] {
+      return [...lista()].sort((a, b) => b.rating - a.rating).slice(0, n);
     }
 
     function mencionar(texto: string): Negocio | null {
@@ -160,7 +172,7 @@ import Icon from '@/components/Icon.astro';
       const t = norm(texto);
 
       if (/^(hola|buenas|hey|holis|buen[oa]s (dias|tardes|noches)|que tal|saludos)\b/.test(t)) {
-        burbuja('bot', '¡Hola! 👋 Soy el asistente de <strong>Clasificados Las Flores</strong>. Puedo buscarte comercios y oficios, o contarte los planes para publicar tu negocio. ¿Qué necesitás?');
+        burbuja('bot', '¡Hola! Soy <strong>Flor</strong> 🌸, la asistente de Clasificados Las Flores. Probá con algo concreto, por ejemplo:<br>· <em>"plomero urgente"</em><br>· <em>"cuánto sale el brunch"</em><br>· <em>"quiero publicar mi negocio"</em>');
         track('bot_pregunta', { intent: 'saludo' });
         return;
       }
@@ -175,6 +187,20 @@ import Icon from '@/components/Icon.astro';
           '¡Buenísimo! Publicar es gratis y tarda 2 minutos. Los planes:<br>🆓 <strong>Gratis $0</strong> · 🥉 <strong>Bronce $5.000/mes</strong> con WhatsApp directo · 🥈 <strong>Plata $12.000/mes</strong> con badge Verificado · 🥇 <strong>Oro $25.000/mes</strong> destacado en home.<br><a href="/planes" class="font-bold text-brand-700 underline">Ver planes</a> · <a href="/publicar" class="font-bold text-brand-700 underline">Publicar ahora</a>',
         );
         track('bot_pregunta', { intent: 'publicar' });
+        return;
+      }
+      // Detalle por plan mencionado (Carlos ya viene con idea: cerrar el funnel)
+      const tier = /\boro\b/.test(t) ? 'oro' : /\bplata\b/.test(t) ? 'plata' : /\bbronce\b/.test(t) ? 'bronce' : /\bgratis\b/.test(t) ? 'gratis' : null;
+      if (tier && /plan|precio|cuesta|publicar|negocio|local|comercio|conviene|diferencia/.test(t)) {
+        const detalle: Record<string, string> = {
+          oro: 'El <strong>Oro ($25.000/mes)</strong> es máxima visibilidad: home, borde dorado, difusión en nuestras redes y soporte prioritario. Ideal si querés liderar tu rubro.',
+          plata: 'El <strong>Plata ($12.000/mes)</strong> te da badge Verificado, mapa, catálogo y redes vinculadas. Ideal para locales que quieren reputación.',
+          bronce: 'El <strong>Bronce ($5.000/mes)</strong> te da botón directo a WhatsApp y hasta 3 fotos. Ideal para oficios que viven del contacto.',
+          gratis: 'El <strong>Gratis ($0)</strong> te da presencia básica con 1 foto. Ideal para probar sin compromiso.',
+        };
+        const tierPath = tier === 'gratis' ? '' : `?plan=${tier}`;
+        burbuja('bot', `${detalle[tier]} <a href="/publicar${tierPath}" class="font-bold text-brand-700 underline">Empezar ahora</a> · <a href="/planes" class="font-bold text-brand-700 underline">Comparar planes</a>`);
+        track('bot_pregunta', { intent: 'plan_detalle' });
         return;
       }
       if (/plan|precio|costo|cuesta|vale|tarifa/.test(t)) {
@@ -213,21 +239,44 @@ import Icon from '@/components/Icon.astro';
         track('bot_pregunta', { intent: 'contacto_negocio' });
         return;
       }
+      if (m && /precio|cuesta|sale|vale|cuanto|tarifa|costo/.test(t)) {
+        if (m.catalogo && m.catalogo.length) {
+          const items = m.catalogo.map((it) => `· ${it.nombre}: <strong>${it.precio}</strong>`).join('<br>');
+          burbuja(
+            'bot',
+            `Precios de <strong>${m.nombre}</strong> (a confirmar):<br>${items}<br><a href="/comercio/${m.slug}" class="font-bold text-brand-700 underline">Ver catálogo completo</a>`,
+          );
+        } else {
+          burbuja(
+            'bot',
+            `<strong>${m.nombre}</strong> no publica precios. Te conviene consultar directo: ` +
+              (m.wa
+                ? `<a href="${waLink(m.wa, `Hola ${m.nombre}, vi tu perfil en Clasificados Las Flores y quiero consultar precios`)}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center mt-1 px-3 py-2 rounded-lg bg-[#25D366] text-white text-xs font-bold">WhatsApp directo</a>`
+                : `<a href="/comercio/${m.slug}" class="font-bold text-brand-700 underline">Ver ficha</a>`),
+          );
+        }
+        track('bot_pregunta', { intent: 'precios_negocio' });
+        return;
+      }
       if (/telefono|whatsapp general|asesor|humano|persona|ayuda/.test(t) && !m) {
         burbuja('bot', `Hablá con nuestro equipo: ${asesorBtn()}`);
         track('bot_pregunta', { intent: 'asesor' });
         return;
       }
 
+      const urgente = /urgente|urgencia|emergencia|ya\b|ahora mismo|rapido|inmediato/.test(t);
       const res = buscar(texto);
       if (res.length) {
-        burbuja('bot', `Encontré esto para vos 👇${res.map(tarjeta).join('')}<p class="mt-2"><a href="/directorio" class="font-bold text-brand-700 underline">Ver directorio completo</a></p>`);
-        track('bot_pregunta', { intent: 'buscar_ok' });
+        // En urgencia primero los que responden directo por WhatsApp (Marta no puede esperar)
+        const ordenadas = urgente ? [...res].sort((a, b) => Number(b.wa !== null) - Number(a.wa !== null)) : res;
+        const intro = urgente ? '⚡ Para urgencias, estos responden directo 👇' : 'Encontré esto para vos 👇';
+        burbuja('bot', `${intro}${ordenadas.map(tarjeta).join('')}<p class="mt-2"><a href="/directorio" class="font-bold text-brand-700 underline">Ver directorio completo</a></p>`);
+        track('bot_pregunta', { intent: urgente ? 'buscar_urgente' : 'buscar_ok' });
         return;
       }
       burbuja(
         'bot',
-        `Mmm, no encontré eso en el directorio 😕 Probá con otra palabra (ej: <em>plomero, pizza, alquiler, farmacia</em>) o hablá con nuestro equipo: ${asesorBtn()}`,
+        `Mmm, no encontré eso en el directorio 😕 Mientras tanto, los mejor valorados:${topValorados().map(tarjeta).join('')}<p class="mt-2">O hablá con nuestro equipo: ${asesorBtn()}</p>`,
       );
       track('bot_pregunta', { intent: 'buscar_vacio' });
     }

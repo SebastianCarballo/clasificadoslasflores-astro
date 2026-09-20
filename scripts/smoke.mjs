@@ -72,7 +72,7 @@ try {
   check('home iconos SVG marca', home.text.includes('icon-whatsapp') || home.text.includes('icon-search'));
   check('asistente virtual presente', home.text.includes('id="asistente-panel"') && home.text.includes('data-rapido'));
   const botIdx = await get('/bot-index.json');
-  check('bot-index.json con negocios', botIdx.status === 200 && botIdx.text.includes('plomero-juan-perez'));
+  check('bot-index.json con negocios', botIdx.status === 200 && botIdx.text.includes('plomero-juan-perez') && botIdx.text.includes('catalogo'));
   check('home microcopy anti-riesgo', home.text.includes('Sin tarjeta'));
   check('home copy honesto', home.text.includes('Comercios destacados') && !home.text.includes('de la semana'));
   check('home cómo funciona rediseñado', home.text.includes('De la búsqueda al WhatsApp') && home.text.includes('steps-line'));
