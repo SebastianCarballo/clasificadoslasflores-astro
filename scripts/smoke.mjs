@@ -96,6 +96,7 @@ try {
   check('directorio 200', dir.status === 200);
   check('directorio índice búsqueda', dir.text.includes('id="businesses-index"'));
   check('directorio 1 ficha real + slots', (dir.text.match(/data-business-card/g) ?? []).length >= 1 && dir.text.includes('Tu negocio acá'));
+  check('directorio modelos por plan (4)', (dir.text.match(/data-modelo-plan/g) ?? []).length === 4);
   check('directorio leyenda de insignias (HMW1)', dir.text.includes('Qué significan las insignias'));
   check('directorio anuncia resultados (aria-live)', dir.text.includes('aria-live="polite"'));
 

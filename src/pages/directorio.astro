@@ -2,6 +2,7 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import BusinessCard from '@/components/BusinessCard.astro';
 import SlotPublicitario from '@/components/SlotPublicitario.astro';
+import ModelosPlanes from '@/components/ModelosPlanes.astro';
 import Icon from '@/components/Icon.astro';
 import { listBusinesses } from '@/data/businesses';
 import { listCategories } from '@/data/categories';
@@ -76,6 +77,7 @@ const categories = await listCategories();
       </div>
       <a href="/publicar" data-event="cta_publicar" class="shrink-0 inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white text-ink-900 font-bold text-sm hover:bg-brand-50 active:scale-[0.98] transition">Publicar mi negocio <Icon name="arrow-right" size={15} /></a>
     </div>
+    <ModelosPlanes />
     <div id="sin-resultados" hidden class="text-center py-16 bg-white rounded-3xl border border-ink-100">
       <p class="text-4xl mb-3" aria-hidden="true">🔍</p>
       <h2 class="font-display font-bold text-xl">Sin resultados</h2>
