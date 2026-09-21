@@ -177,13 +177,13 @@ importers:
         version: 0.10.0
       '@lucide/astro':
         specifier: ^1.47.0
-        version: 1.47.0(astro@5.18.2(jiti@2.7.0)(lightningcss@1.32.0)(rollup@4.63.3)(typescript@5.9.3)(yaml@2.9.1))
+        version: 1.47.0(astro@5.18.2(@types/node@26.6.2)(jiti@2.7.0)(lightningcss@1.32.0)(rollup@4.63.3)(typescript@5.9.3)(yaml@2.9.1))
       astro:
         specifier: ^5.7.0
-        version: 5.18.2(jiti@2.7.0)(lightningcss@1.32.0)(rollup@4.63.3)(typescript@5.9.3)(yaml@2.9.1)
+        version: 5.18.2(@types/node@26.6.2)(jiti@2.7.0)(lightningcss@1.32.0)(rollup@4.63.3)(typescript@5.9.3)(yaml@2.9.1)
       sharp:
         specifier: ^0.35.4
-        version: 0.35.4
+        version: 0.35.4(@types/node@26.6.2)
     devDependencies:
       '@astrojs/check':
         specifier: ^0.9.10
@@ -191,9 +191,15 @@ importers:
       '@google/design.md':
         specifier: ^0.4.0
         version: 0.4.0
+      '@playwright/test':
+        specifier: ^1.63.0
+        version: 1.63.0
       '@tailwindcss/vite':
         specifier: ^4.1.0
-        version: 4.3.3(vite@6.4.3(jiti@2.7.0)(lightningcss@1.32.0)(yaml@2.9.1))
+        version: 4.3.3(vite@6.4.3(@types/node@26.6.2)(jiti@2.7.0)(lightningcss@1.32.0)(yaml@2.9.1))
+      '@types/node':
+        specifier: ^26.6.2
+        version: 26.6.2
       tailwindcss:
         specifier: ^4.1.0
         version: 4.3.3
@@ -996,6 +1002,11 @@ packages:
   '@oslojs/encoding@1.1.0':
     resolution: {integrity: sha512-70wQhgYmndg4GCPxPPxPGevRKqTIJ2Nh4OkiMWmDAVYsTQ+Ta7Sq+rPevXyXGdzr30/qZBnyOalCszoMxlyldQ==}
 
+  '@playwright/test@1.63.0':
+    resolution: {integrity: sha512-oxMK4vllB9RK5NQ2l1pq1IfOf2AvnEuj/vYGDj0H2nMtmtZpKtCwt/l00GEO6xjGfpBNAvjovvYdCm50dRQkpQ==}
+    engines: {node: '>=20'}
+    hasBin: true
+
   '@rollup/pluginutils@5.4.0':
     resolution: {integrity: sha512-MfPp06CjRLfXQ3wY0R8vJDYBy/MvVcc9OulEfR0B8Iv9ko+GCNaRZ+EpJYFl27LhKsZK0o420sYCRHCjfCgeUg==}
     engines: {node: '>=14.0.0'}
@@ -1281,6 +1292,9 @@ packages:
 
   '@types/nlcst@2.0.3':
     resolution: {integrity: sha512-vSYNSDe6Ix3q+6Z7ri9lyWqgGhJTmzRjZRqyq15N0Z/1/UnVsno9G/N40NBijoYx2seFDIl0+B2mgAb9mezUCA==}
+
+  '@types/node@26.6.2':
+    resolution: {integrity: sha512-X1P21scMv4zGKLYqjdGjaKa7COa0RKVYYZZN/NfvLQ1JegxFhdhpZG/Lyn8AXx6CDUavKAd11v6BvfpkDByK8g==}
 
   '@types/unist@2.0.11':
     resolution: {integrity: sha512-CmBKiL6NNo/OqgmMn95Fk9Whlp2mtvIv+KNpQKN2F4SjvrEesubTRWGYSg+BnWZOnlCaSTU1sMpsBOzgbYhnsA==}
@@ -2364,6 +2378,16 @@ packages:
     resolution: {integrity: sha512-wQ0b/W4Fr01qtpHlqSqspcj3EhBvimsdh0KlHhH8HRZnMsEa0ea2fTULOXOS9ccQr3om+GcGRk4e+isrZWV8qQ==}
     engines: {node: '>=16.20.0'}
 
+  playwright-core@1.63.0:
+    resolution: {integrity: sha512-rYCsBF/M5HjUch52bbtVONEFjv6Xu8sm8h72dNlR5bzIE1fvC/bxgspzkjSfU+MweEMmPM8KJebG6nnyxo5mCg==}
+    engines: {node: '>=20'}
+    hasBin: true
+
+  playwright@1.63.0:
+    resolution: {integrity: sha512-+7ziBLidS4NaNCdt57SUDT+wYmmd5fmiQejUic/kb+YsYSCPyOOE9sebzMjNmQrsnNpDJqd4WHvV/8lfKfUDUg==}
+    engines: {node: '>=20'}
+    hasBin: true
+
   postcss@8.5.28:
     resolution: {integrity: sha512-RRuzqDtt5Y9h3quz5hWhK+TPnsmVs6WwSU6LkJMeY4HstUEDuYTG8UJSdawMRzmzAtV+KEoG8N3Qg2qLy5vM/A==}
     engines: {node: ^10 || ^12 || >=14}
@@ -2663,6 +2687,9 @@ packages:
 
   uncrypto@0.1.3:
     resolution: {integrity: sha512-Ql87qFHB3s/De2ClA9e0gsnS6zXG27SkTiSJwjCc9MebbfapQfuPzumMIUMi38ezPZVNFcHI9sUIepeQfw8J8Q==}
+
+  undici-types@8.9.0:
+    resolution: {integrity: sha512-KTDyRTYX8sWmKXAikPHHSyc63CRPETMctyjKFupcC6OBLXT3xsN0e9aF7m+mIXutFWpUXuedtowG7iLOzp0kQg==}
 
   undici@8.10.2:
     resolution: {integrity: sha512-/y4/bH9YNU5hi9NIrpOuvGXFcxrj3CMrV+/AYpowAYTpHn8gX/XPFjNy766FPoYY0miQhdW977JFWKGNhBdwyQ==}
@@ -3572,9 +3599,9 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.6.0
 
-  '@lucide/astro@1.47.0(astro@5.18.2(jiti@2.7.0)(lightningcss@1.32.0)(rollup@4.63.3)(typescript@5.9.3)(yaml@2.9.1))':
+  '@lucide/astro@1.47.0(astro@5.18.2(@types/node@26.6.2)(jiti@2.7.0)(lightningcss@1.32.0)(rollup@4.63.3)(typescript@5.9.3)(yaml@2.9.1))':
     dependencies:
-      astro: 5.18.2(jiti@2.7.0)(lightningcss@1.32.0)(rollup@4.63.3)(typescript@5.9.3)(yaml@2.9.1)
+      astro: 5.18.2(@types/node@26.6.2)(jiti@2.7.0)(lightningcss@1.32.0)(rollup@4.63.3)(typescript@5.9.3)(yaml@2.9.1)
 
   '@modelcontextprotocol/sdk@1.30.0(zod@3.25.76)':
     dependencies:
@@ -3608,6 +3635,10 @@ snapshots:
       '@tybys/wasm-util': 0.10.4
 
   '@oslojs/encoding@1.1.0': {}
+
+  '@playwright/test@1.63.0':
+    dependencies:
+      playwright: 1.63.0
 
   '@rollup/pluginutils@5.4.0(rollup@4.63.3)':
     dependencies:
@@ -3786,12 +3817,12 @@ snapshots:
       '@tailwindcss/oxide-win32-arm64-msvc': 4.3.3
       '@tailwindcss/oxide-win32-x64-msvc': 4.3.3
 
-  '@tailwindcss/vite@4.3.3(vite@6.4.3(jiti@2.7.0)(lightningcss@1.32.0)(yaml@2.9.1))':
+  '@tailwindcss/vite@4.3.3(vite@6.4.3(@types/node@26.6.2)(jiti@2.7.0)(lightningcss@1.32.0)(yaml@2.9.1))':
     dependencies:
       '@tailwindcss/node': 4.3.3
       '@tailwindcss/oxide': 4.3.3
       tailwindcss: 4.3.3
-      vite: 6.4.3(jiti@2.7.0)(lightningcss@1.32.0)(yaml@2.9.1)
+      vite: 6.4.3(@types/node@26.6.2)(jiti@2.7.0)(lightningcss@1.32.0)(yaml@2.9.1)
 
   '@tybys/wasm-util@0.10.4':
     dependencies:
@@ -3820,6 +3851,10 @@ snapshots:
   '@types/nlcst@2.0.3':
     dependencies:
       '@types/unist': 3.0.3
+
+  '@types/node@26.6.2':
+    dependencies:
+      undici-types: 8.9.0
 
   '@types/unist@2.0.11': {}
 
@@ -3934,7 +3969,7 @@ snapshots:
 
   array-iterate@2.0.1: {}
 
-  astro@5.18.2(jiti@2.7.0)(lightningcss@1.32.0)(rollup@4.63.3)(typescript@5.9.3)(yaml@2.9.1):
+  astro@5.18.2(@types/node@26.6.2)(jiti@2.7.0)(lightningcss@1.32.0)(rollup@4.63.3)(typescript@5.9.3)(yaml@2.9.1):
     dependencies:
       '@astrojs/compiler': 2.13.1
       '@astrojs/internal-helpers': 0.7.6
@@ -3991,8 +4026,8 @@ snapshots:
       unist-util-visit: 5.1.0
       unstorage: 1.17.5
       vfile: 6.0.3
-      vite: 6.4.3(jiti@2.7.0)(lightningcss@1.32.0)(yaml@2.9.1)
-      vitefu: 1.1.3(vite@6.4.3(jiti@2.7.0)(lightningcss@1.32.0)(yaml@2.9.1))
+      vite: 6.4.3(@types/node@26.6.2)(jiti@2.7.0)(lightningcss@1.32.0)(yaml@2.9.1)
+      vitefu: 1.1.3(vite@6.4.3(@types/node@26.6.2)(jiti@2.7.0)(lightningcss@1.32.0)(yaml@2.9.1))
       xxhash-wasm: 1.1.0
       yargs-parser: 21.1.1
       yocto-spinner: 0.2.3
@@ -5300,6 +5335,12 @@ snapshots:
 
   pkce-challenge@5.0.1: {}
 
+  playwright-core@1.63.0: {}
+
+  playwright@1.63.0:
+    dependencies:
+      playwright-core: 1.63.0
+
   postcss@8.5.28:
     dependencies:
       nanoid: 3.3.19
@@ -5572,7 +5613,7 @@ snapshots:
       '@img/sharp-win32-x64': 0.34.5
     optional: true
 
-  sharp@0.35.4:
+  sharp@0.35.4(@types/node@26.6.2):
     dependencies:
       '@img/colour': 1.1.0
       detect-libc: 2.1.2
@@ -5603,6 +5644,7 @@ snapshots:
       '@img/sharp-win32-arm64': 0.35.4
       '@img/sharp-win32-ia32': 0.35.4
       '@img/sharp-win32-x64': 0.35.4
+      '@types/node': 26.6.2
 
   shebang-command@2.0.0:
     dependencies:
@@ -5746,6 +5788,8 @@ snapshots:
 
   uncrypto@0.1.3: {}
 
+  undici-types@8.9.0: {}
+
   undici@8.10.2: {}
 
   unified@11.0.5:
@@ -5840,7 +5884,7 @@ snapshots:
       '@types/unist': 3.0.3
       vfile-message: 4.0.3
 
-  vite@6.4.3(jiti@2.7.0)(lightningcss@1.32.0)(yaml@2.9.1):
+  vite@6.4.3(@types/node@26.6.2)(jiti@2.7.0)(lightningcss@1.32.0)(yaml@2.9.1):
     dependencies:
       esbuild: 0.25.12
       fdir: 6.5.0(picomatch@4.0.7)
@@ -5849,14 +5893,15 @@ snapshots:
       rollup: 4.63.3
       tinyglobby: 0.2.17
     optionalDependencies:
+      '@types/node': 26.6.2
       fsevents: 2.3.3
       jiti: 2.7.0
       lightningcss: 1.32.0
       yaml: 2.9.1
 
-  vitefu@1.1.3(vite@6.4.3(jiti@2.7.0)(lightningcss@1.32.0)(yaml@2.9.1)):
+  vitefu@1.1.3(vite@6.4.3(@types/node@26.6.2)(jiti@2.7.0)(lightningcss@1.32.0)(yaml@2.9.1)):
     optionalDependencies:
-      vite: 6.4.3(jiti@2.7.0)(lightningcss@1.32.0)(yaml@2.9.1)
+      vite: 6.4.3(@types/node@26.6.2)(jiti@2.7.0)(lightningcss@1.32.0)(yaml@2.9.1)
 
   volar-service-css@0.0.71(@volar/language-service@2.4.28(typescript@5.9.3)):
     dependencies:

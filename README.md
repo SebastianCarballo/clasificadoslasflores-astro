@@ -62,8 +62,10 @@ pnpm dev         # http://localhost:4321
 pnpm build       # dist/
 pnpm preview
 pnpm check       # tipos (0 errores exigido)
-pnpm smoke       # build + preview + 24 asserts + budgets
+pnpm smoke       # build + preview + 30+ asserts + budgets
+pnpm test:e2e    # build + suite Playwright (25 tests, Chromium)
 pnpm verify      # check + smoke
+pnpm verify:full # verify + e2e
 pnpm design:lint # valida tokens y contraste WCAG de DESIGN.md
 pnpm design:export # exporta tokens al formato @theme de Tailwind 4
 ```

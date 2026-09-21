@@ -10,6 +10,9 @@
     "preview": "astro preview",
     "check": "astro check",
     "smoke": "node scripts/smoke.mjs",
+    "test:e2e": "pnpm build && playwright test",
+    "test:e2e:ui": "pnpm build && playwright test --ui",
+    "verify:full": "pnpm verify && pnpm exec playwright test",
     "verify": "astro check && node scripts/smoke.mjs",
     "design:lint": "designmd lint DESIGN.md",
     "design:export": "designmd export --format css-tailwind DESIGN.md"
@@ -25,7 +28,9 @@
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
     "@google/design.md": "^0.4.0",
+    "@playwright/test": "^1.63.0",
     "@tailwindcss/vite": "^4.1.0",
+    "@types/node": "^26.6.2",
     "tailwindcss": "^4.1.0",
     "typescript": "^5.8.0"
   }
