@@ -14,24 +14,25 @@ test.describe('home', () => {
 
   test('el buscador navega al directorio con query', async ({ page }) => {
     await page.goto('/');
-    await page.locator('#q').fill('plomero');
+    await page.locator('#q').fill('gratis');
     await page.getByRole('button', { name: 'Buscar' }).click();
-    await expect(page).toHaveURL(/\/directorio\?q=plomero/);
-    await expect(page.locator('#resultados')).toContainText(/Plomería Juan Pérez/);
+    await expect(page).toHaveURL(/\/directorio\?q=gratis/);
+    await expect(page.locator('#resultados')).toContainText(/Tu Comercio Acá/);
   });
 
   test('stats únicas + secciones pobladas al hacer scroll', async ({ page }) => {
     await page.goto('/');
     // Una sola banda de números (no duplicada en hero)
-    await expect(page.locator('text=negocios publicados')).toHaveCount(1);
+    await expect(page.locator('text=/negocios? publicados?/')).toHaveCount(1);
     for (const titulo of ['Buscá por categoría', 'Comercios destacados', 'Últimos agregados']) {
       await expect(page.getByRole('heading', { name: titulo })).toBeVisible();
     }
-    // Las cards aparecen al scrollear (reveals) — la queja de "bloques vacíos"
+    // Las cards aparecen al scrollear (reveals) + slots "publicitá aquí" poblando la grilla
     const cards = page.locator('[data-business-card]');
     await expect(cards.first()).toBeVisible();
-    await cards.nth(5).scrollIntoViewIfNeeded();
-    await expect(cards.nth(5)).toBeVisible();
+    await expect(page.locator('[data-slot-publicitario]').first()).toBeVisible();
+    // La vidriera real existe entre los slots
+    await expect(cards.filter({ hasText: /Tu Comercio Acá/ }).first()).toBeVisible();
     await expect(page.getByText('De la búsqueda al WhatsApp')).toBeVisible();
   });
 

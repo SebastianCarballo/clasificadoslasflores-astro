@@ -41,10 +41,10 @@ send({ jsonrpc: '2.0', id: 2, method: 'tools/list' });
 const list = await wait();
 console.log('tools:', list.result?.tools?.map((t) => t.name).join(', '));
 
-send({ jsonrpc: '2.0', id: 3, method: 'tools/call', params: { name: 'buscar_negocios', arguments: { consulta: 'plomero' } } });
+send({ jsonrpc: '2.0', id: 3, method: 'tools/call', params: { name: 'buscar_negocios', arguments: { consulta: 'muestra' } } });
 const call1 = await wait();
 const r1 = JSON.parse(call1.result.content[0].text);
-console.log('buscar plomero →', r1.length, 'resultado(s):', r1.map((b) => b.slug).join(', '));
+console.log('buscar muestra →', r1.length, 'resultado(s):', r1.map((b) => b.slug).join(', '));
 
 send({ jsonrpc: '2.0', id: 4, method: 'tools/call', params: { name: 'ver_planes', arguments: {} } });
 const call2 = await wait();

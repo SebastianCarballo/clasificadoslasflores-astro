@@ -30,13 +30,18 @@ const businesses = defineCollection({
       .optional(),
     hasWhatsAppButton: z.boolean().default(false),
     hours: z.string().min(3),
-    image: z.string().regex(/\.(jpe?g|png|webp)$/, 'Archivo local en src/assets/negocios'),
-    gallery: z.array(z.string().regex(/\.(jpe?g|png|webp)$/)).min(1),
+    image: z.string().refine((s) => s.startsWith('/') || /\.(jpe?g|png|webp)$/.test(s), {
+      message: 'URL pública (/) o archivo local en src/assets/negocios',
+    }),
+    gallery: z
+      .array(
+        z.string().refine((s) => s.startsWith('/') || /\.(jpe?g|png|webp)$/.test(s)),
+      )
+      .min(1),
     verified: z.boolean().default(false),
     featured: z.boolean().default(false),
+    demo: z.boolean().default(false),
     plan: z.enum(PLAN_TIERS),
-    rating: z.number().min(0).max(5),
-    reviewsCount: z.number().int().min(0),
     tags: z.array(z.string()).default([]),
     catalogo: z
       .array(z.object({ nombre: z.string().min(2), precio: z.string().min(1) }))

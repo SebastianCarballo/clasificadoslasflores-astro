@@ -67,12 +67,12 @@ try {
   check('home tiene 1 h1', (home.text.match(/<h1/g) ?? []).length === 1);
   check('home canonical', home.text.includes('rel="canonical"'));
   check('home OG propia', home.text.includes('/og-cover.svg'));
-  check('home prueba social real', home.text.includes('promedio en') && home.text.includes('verificados'));
+  check('home prueba social real', home.text.includes('publicado') && home.text.includes('verificados') && !home.text.includes('reseñas'));
   check('home motion system', home.text.includes('data-reveal-group') && home.text.includes('float-soft'));
   check('home iconos SVG marca', home.text.includes('icon-whatsapp') || home.text.includes('icon-search'));
   check('asistente virtual presente', home.text.includes('id="asistente-panel"') && home.text.includes('data-rapido'));
   const botIdx = await get('/bot-index.json');
-  check('bot-index.json con negocios', botIdx.status === 200 && botIdx.text.includes('plomero-juan-perez') && botIdx.text.includes('catalogo'));
+  check('bot-index.json con negocios', botIdx.status === 200 && botIdx.text.includes('ficha-gratis-muestra') && botIdx.text.includes('catalogo') === false);
   check('home microcopy anti-riesgo', home.text.includes('Sin tarjeta'));
   check('home copy honesto', home.text.includes('Comercios destacados') && !home.text.includes('de la semana'));
   check('home cómo funciona rediseñado', home.text.includes('De la búsqueda al WhatsApp') && home.text.includes('steps-line'));
@@ -94,31 +94,21 @@ try {
   const dir = await get('/directorio');
   check('directorio 200', dir.status === 200);
   check('directorio índice búsqueda', dir.text.includes('id="businesses-index"'));
-  check('directorio 9 cards con data-slug', (dir.text.match(/data-business-card/g) ?? []).length >= 9);
+  check('directorio 1 ficha real + slots', (dir.text.match(/data-business-card/g) ?? []).length >= 1 && dir.text.includes('Tu negocio acá'));
   check('directorio leyenda de insignias (HMW1)', dir.text.includes('Qué significan las insignias'));
   check('directorio anuncia resultados (aria-live)', dir.text.includes('aria-live="polite"'));
 
-  const ficha = await get('/comercio/rotiseria-el-buen-sabor/');
+  const ficha = await get('/comercio/ficha-gratis-muestra/');
   check('ficha 200', ficha.status === 200);
-  check('ficha LocalBusiness + geo', ficha.text.includes('"GeoCoordinates"'));
+  check('ficha LocalBusiness sin geo (gratis sin mapa)', ficha.text.includes('"LocalBusiness"') && !ficha.text.includes('GeoCoordinates'));
   check('ficha BreadcrumbList', ficha.text.includes('"BreadcrumbList"'));
-  check('ficha mapa OSM', ficha.text.includes('id="mapa-negocio"'));
   check('ficha CTA sticky móvil', ficha.text.includes('Volver al directorio'));
   check('ficha compartir + reportar', ficha.text.includes('btn-compartir') && ficha.text.includes('Datos incorrectos'));
-  check('ficha tracking whatsapp', ficha.text.includes('data-event="whatsapp_click"'));
-  check('oro tiene catálogo del plan', ficha.text.includes('Catálogo') && ficha.text.includes('Menú del día'));
+  check('ficha demo deriva a publicar gratis (sin WA comercial)', ficha.text.includes('Empezar gratis con la mía') && ficha.text.includes('slot_publicar') && !ficha.text.includes('whatsapp_click'));
+  check('demo gratis vende empezar (MUESTRA + CTA, sin extras pagos)', ficha.text.includes('MUESTRA') && ficha.text.includes('Empezar gratis con la mía') && !ficha.text.includes('Catálogo') && !ficha.text.includes('id="mapa-negocio"'));
 
-  const bronce = await get('/comercio/plomero-juan-perez/');
-  check('bronce sin badge verificado (es de Plata+)', bronce.status === 200 && !bronce.text.includes('Verificado'));
-
-  const gratis = await get('/comercio/taller-mecanico-el-rayo/');
-  check(
-    'gratis sin extras (sin CTA WhatsApp, mapa ni catálogo)',
-    gratis.status === 200 &&
-      !gratis.text.includes('whatsapp_click') &&
-      !gratis.text.includes('id="mapa-negocio"') &&
-      !gratis.text.includes('Catálogo'),
-  );
+  const salud = await get('/categoria/salud/');
+  check('categoría vacía invita a publicar', salud.status === 200 && salud.text.includes('Sé el primero en'));
   check('ficha info antes que imagen (h1 → img)', ficha.text.indexOf('<h1') !== -1 && ficha.text.indexOf('<h1') < ficha.text.indexOf('<img'));
 
   const alta = await get('/publicar');

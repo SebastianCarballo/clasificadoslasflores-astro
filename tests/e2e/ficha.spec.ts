@@ -1,10 +1,10 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('ficha de negocio', () => {
-  test('oro: info primero, catálogo, mapa y WhatsApp', async ({ page }) => {
-    await page.goto('/comercio/rotiseria-el-buen-sabor/');
+  test('demo gratis: MUESTRA, CTA empezar, sin extras pagos', async ({ page }) => {
+    await page.goto('/comercio/ficha-gratis-muestra/');
     const h1 = page.getByRole('heading', { level: 1 });
-    await expect(h1).toContainText('Rotisería El Buen Sabor');
+    await expect(h1).toContainText('Tu Comercio Acá');
 
     // Orden DOM: h1 antes que la primera imagen (decisión UX).
     // DOCUMENT_POSITION_FOLLOWING = 4 (literal: el global Node no existe en este contexto)
@@ -17,30 +17,22 @@ test.describe('ficha de negocio', () => {
     });
     expect(hSigueImg).toBe(true);
 
-    await expect(page.locator('section[aria-label^="Catálogo"]')).toContainText('Menú del día');
-    await expect(page.locator('#mapa-negocio')).toBeVisible();
-    const wa = page.getByRole('link', { name: /Hablar por WhatsApp/ });
-    await expect(wa).toHaveAttribute('href', /^https:\/\/wa\.me\//);
+    await expect(page.getByText('MUESTRA').first()).toBeVisible();
+    await expect(page.getByText('Catálogo', { exact: true })).toHaveCount(0);
+    await expect(page.locator('#mapa-negocio')).toHaveCount(0);
+    const cta = page.getByRole('link', { name: /Empezar gratis con la mía/ }).first();
+    await expect(cta).toHaveAttribute('href', '/publicar');
     await expect(page.getByRole('link', { name: /Compartir|compartir/i }).or(page.locator('#btn-compartir'))).toBeVisible();
   });
 
-  test('gratis: sin CTA WhatsApp, sin mapa ni catálogo', async ({ page }) => {
-    await page.goto('/comercio/taller-mecanico-el-rayo/');
-    await expect(page.locator('#mapa-negocio')).toHaveCount(0);
-    await expect(page.getByText('Catálogo', { exact: true })).toHaveCount(0);
-    await expect(page.getByRole('link', { name: /Llamar/ })).toBeVisible();
-    // Ningún CTA de WhatsApp del negocio (el footer del sitio sí tiene el suyo)
-    await expect(page.locator('main [data-event="whatsapp_click"]')).toHaveCount(0);
+  test('sin relacionados muestra slot publicitario (modo gran apertura)', async ({ page }) => {
+    await page.goto('/comercio/ficha-gratis-muestra/');
+    await expect(page.locator('[data-slot-publicitario]')).toBeVisible();
+    await expect(page.locator('[data-slot-publicitario]')).toContainText(/Publicar gratis/);
   });
 
-  test('bronce: WhatsApp sí, badge verificado no', async ({ page }) => {
-    await page.goto('/comercio/plomero-juan-perez/');
-    await expect(page.getByRole('link', { name: /Hablar por WhatsApp/ })).toBeVisible();
-    await expect(page.getByText('Comercio Verificado')).toHaveCount(0);
-  });
-
-  test('volver al directorio y relacionados navegan', async ({ page }) => {
-    await page.goto('/comercio/cafe-central-las-flores/');
+  test('volver al directorio navega', async ({ page }) => {
+    await page.goto('/comercio/ficha-gratis-muestra/');
     await page.getByRole('link', { name: /Volver al directorio/ }).click();
     await expect(page).toHaveURL('/directorio');
   });

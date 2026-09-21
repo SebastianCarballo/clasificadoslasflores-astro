@@ -54,17 +54,12 @@
           "minLength": 3
         },
         "image": {
-          "type": "string",
-          "pattern": "\\.(jpe?g|png|webp)$",
-          "errorMessage": {
-            "pattern": "Archivo local en src/assets/negocios"
-          }
+          "type": "string"
         },
         "gallery": {
           "type": "array",
           "items": {
-            "type": "string",
-            "pattern": "\\.(jpe?g|png|webp)$"
+            "type": "string"
           },
           "minItems": 1
         },
@@ -76,6 +71,10 @@
           "type": "boolean",
           "default": false
         },
+        "demo": {
+          "type": "boolean",
+          "default": false
+        },
         "plan": {
           "type": "string",
           "enum": [
@@ -84,15 +83,6 @@
             "plata",
             "oro"
           ]
-        },
-        "rating": {
-          "type": "number",
-          "minimum": 0,
-          "maximum": 5
-        },
-        "reviewsCount": {
-          "type": "integer",
-          "minimum": 0
         },
         "tags": {
           "type": "array",
@@ -166,8 +156,6 @@
         "image",
         "gallery",
         "plan",
-        "rating",
-        "reviewsCount",
         "createdAt"
       ],
       "additionalProperties": false

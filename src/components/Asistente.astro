@@ -36,8 +36,7 @@ import Icon from '@/components/Icon.astro';
     <div id="asistente-msgs" class="flex-1 overflow-y-auto px-4 py-4 space-y-3 text-sm" aria-live="polite"></div>
 
     <div class="px-4 pb-2 flex flex-wrap gap-2" id="asistente-rapidos">
-      <button type="button" data-rapido="plomero urgente" class="px-3 py-2 rounded-full bg-ink-100 text-xs font-semibold hover:bg-ink-200 transition">🔧 Plomero urgente</button>
-      <button type="button" data-rapido="comida" class="px-3 py-2 rounded-full bg-ink-100 text-xs font-semibold hover:bg-ink-200 transition">🍕 Comida</button>
+      <button type="button" data-rapido="oro" class="px-3 py-2 rounded-full bg-ink-100 text-xs font-semibold hover:bg-ink-200 transition">🥇 Espacio Oro</button>
       <button type="button" data-rapido="cuánto cuesta publicar" class="px-3 py-2 rounded-full bg-ink-100 text-xs font-semibold hover:bg-ink-200 transition">💰 Planes y precios</button>
       <button type="button" data-rapido="quiero publicar mi negocio" class="px-3 py-2 rounded-full bg-ink-100 text-xs font-semibold hover:bg-ink-200 transition">📢 Publicar</button>
     </div>
@@ -49,7 +48,7 @@ import Icon from '@/components/Icon.astro';
         type="text"
         autocomplete="off"
         enterkeyhint="send"
-        placeholder="Ej: busco electricista…"
+        placeholder="Ej: busco empanadas…"
         class="flex-1 min-w-0 px-4 py-3 rounded-xl bg-ink-100 outline-none focus:ring-2 focus:ring-brand-500 text-sm"
       />
       <button type="submit" aria-label="Enviar pregunta" class="w-12 h-12 shrink-0 rounded-xl bg-brand-600 text-white grid place-items-center hover:bg-brand-700 active:scale-95 transition">
@@ -62,8 +61,8 @@ import Icon from '@/components/Icon.astro';
     import { track } from '@/utils/analytics';
 
     interface Negocio {
-      slug: string; nombre: string; categoria: string; resumen: string;
-      direccion: string; horarios: string; plan: string; rating: number;
+      slug: string; nombre: string; categoria: string; cat: string; resumen: string;
+      direccion: string; horarios: string; plan: string;
       verificado: boolean; wa: string | null; telefono: string;
       haystack: string; catalogo?: { nombre: string; precio: string }[];
     }
@@ -128,7 +127,7 @@ import Icon from '@/components/Icon.astro';
         <p class="font-bold"><a href="${ficha}" class="hover:underline">${n.nombre}</a>
         ${n.verificado ? ' <span class="text-[10px] font-bold bg-ink-900 text-white px-1.5 py-0.5 rounded-full align-middle">✓</span>' : ''}</p>
         <p class="text-xs text-slate-600 mt-0.5">${n.resumen}</p>
-        <p class="text-xs text-slate-500 mt-1">★ ${n.rating.toFixed(1)} · ${n.direccion}</p>
+        <p class="text-xs text-slate-500 mt-1">${n.categoria} · ${n.direccion}</p>
         ${contacto}</div>`;
     }
 
@@ -154,13 +153,37 @@ import Icon from '@/components/Icon.astro';
           return { n, score };
         })
         .filter((e) => e.score > 0)
-        .sort((a, b) => b.score - a.score || PLAN_ORDEN[a.n.plan] - PLAN_ORDEN[b.n.plan] || b.n.rating - a.n.rating)
+        .sort((a, b) => b.score - a.score || PLAN_ORDEN[a.n.plan] - PLAN_ORDEN[b.n.plan] || a.n.nombre.localeCompare(b.n.nombre))
         .slice(0, 3)
         .map((e) => e.n);
     }
 
-    function topValorados(n = 2): Negocio[] {
-      return [...lista()].sort((a, b) => b.rating - a.rating).slice(0, n);
+    // Alias rubro → categoría: "comida" debe encontrar la gastronomía aunque
+    // la palabra exacta no esté en la ficha.
+    const ALIAS: Record<string, string> = {
+      comida: 'gastronomia', comer: 'gastronomia', restaurante: 'gastronomia',
+      parrilla: 'gastronomia', cena: 'gastronomia', almuerzo: 'gastronomia',
+      auto: 'vehiculos', autos: 'vehiculos', moto: 'vehiculos',
+      ropa: 'comercios', comprar: 'comercios', tienda: 'comercios',
+      trabajo: 'empleo', empleo: 'empleo',
+      farmacia: 'salud', medico: 'salud', salud: 'salud',
+      curso: 'educacion', ingles: 'educacion', clases: 'educacion',
+      casa: 'inmuebles', alquiler: 'inmuebles', departamento: 'inmuebles',
+      plomero: 'servicios', electricista: 'servicios', gasista: 'servicios',
+    };
+
+    function porAlias(texto: string): Negocio[] {
+      const words = norm(texto).split(/\s+/);
+      const cat = words.map((w) => ALIAS[w]).find(Boolean);
+      if (!cat) return [];
+      return lista()
+        .filter((n) => n.cat === cat)
+        .sort((a, b) => PLAN_ORDEN[a.plan] - PLAN_ORDEN[b.plan] || a.nombre.localeCompare(b.nombre))
+        .slice(0, 3);
+    }
+
+    function destacados(n = 2): Negocio[] {
+      return [...lista()].sort((a, b) => PLAN_ORDEN[a.plan] - PLAN_ORDEN[b.plan] || a.nombre.localeCompare(b.nombre)).slice(0, n);
     }
 
     function mencionar(texto: string): Negocio | null {
@@ -172,7 +195,7 @@ import Icon from '@/components/Icon.astro';
       const t = norm(texto);
 
       if (/^(hola|buenas|hey|holis|buen[oa]s (dias|tardes|noches)|que tal|saludos)\b/.test(t)) {
-        burbuja('bot', '¡Hola! Soy <strong>Flor</strong> 🌸, la asistente de Clasificados Las Flores. Probá con algo concreto, por ejemplo:<br>· <em>"plomero urgente"</em><br>· <em>"cuánto sale el brunch"</em><br>· <em>"quiero publicar mi negocio"</em>');
+        burbuja('bot', '¡Hola! Soy <strong>Flor</strong> 🌸, la asistente de Clasificados Las Flores. Probá con algo concreto, por ejemplo:<br>· <em>"qué es el espacio oro"</em><br>· <em>"cuánto cuesta publicar"</em><br>· <em>"comida"</em>');
         track('bot_pregunta', { intent: 'saludo' });
         return;
       }
@@ -265,18 +288,27 @@ import Icon from '@/components/Icon.astro';
       }
 
       const urgente = /urgente|urgencia|emergencia|ya\b|ahora mismo|rapido|inmediato/.test(t);
-      const res = buscar(texto);
+      let res = buscar(texto);
+      let viaAlias = false;
+      if (!res.length) {
+        res = porAlias(texto);
+        viaAlias = res.length > 0;
+      }
       if (res.length) {
         // En urgencia primero los que responden directo por WhatsApp (Marta no puede esperar)
         const ordenadas = urgente ? [...res].sort((a, b) => Number(b.wa !== null) - Number(a.wa !== null)) : res;
-        const intro = urgente ? '⚡ Para urgencias, estos responden directo 👇' : 'Encontré esto para vos 👇';
+        const intro = urgente
+          ? '⚡ Para urgencias, estos responden directo 👇'
+          : viaAlias
+            ? `En ${res[0]?.categoria ?? 'ese rubro'} tenemos esto 👇`
+            : 'Encontré esto para vos 👇';
         burbuja('bot', `${intro}${ordenadas.map(tarjeta).join('')}<p class="mt-2"><a href="/directorio" class="font-bold text-brand-700 underline">Ver directorio completo</a></p>`);
-        track('bot_pregunta', { intent: urgente ? 'buscar_urgente' : 'buscar_ok' });
+        track('bot_pregunta', { intent: urgente ? 'buscar_urgente' : viaAlias ? 'buscar_alias' : 'buscar_ok' });
         return;
       }
       burbuja(
         'bot',
-        `Mmm, no encontré eso en el directorio 😕 Mientras tanto, los mejor valorados:${topValorados().map(tarjeta).join('')}<p class="mt-2">O hablá con nuestro equipo: ${asesorBtn()}</p>`,
+        `Mmm, no encontré eso en el directorio 😕 Mientras tanto, los destacados:${destacados().map(tarjeta).join('')}<p class="mt-2">O hablá con nuestro equipo: ${asesorBtn()}</p>`,
       );
       track('bot_pregunta', { intent: 'buscar_vacio' });
     }

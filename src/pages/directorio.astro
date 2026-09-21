@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import BusinessCard from '@/components/BusinessCard.astro';
+import SlotPublicitario from '@/components/SlotPublicitario.astro';
 import Icon from '@/components/Icon.astro';
 import { listBusinesses } from '@/data/businesses';
 import { listCategories } from '@/data/categories';
@@ -63,6 +64,18 @@ const categories = await listCategories();
     <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5" id="resultados">
       {businesses.map((b) => <BusinessCard business={b} />)}
     </div>
+    {/* Espacios libres: solo sin filtros (al filtrar se ocultan por JS) */}
+    <div id="slots-directorio" class="mt-5 grid sm:grid-cols-2 gap-5">
+      <SlotPublicitario titulo="Tu negocio acá" texto="Miles de vecinos buscan cada semana. Sé el primero de tu rubro." />
+      <SlotPublicitario titulo="Tu negocio acá" texto="Gratis, sin tarjeta y con contacto directo a tu WhatsApp." />
+    </div>
+    <div class="mt-8 rounded-3xl bg-ink-950 text-white p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center gap-4 justify-between">
+      <div>
+        <h2 class="font-display font-bold text-xl">¿No está tu rubro?</h2>
+        <p class="text-sm text-slate-300 mt-1">Publicá gratis y aparecé acá mismo en 24 horas.</p>
+      </div>
+      <a href="/publicar" data-event="cta_publicar" class="shrink-0 inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white text-ink-900 font-bold text-sm hover:bg-brand-50 active:scale-[0.98] transition">Publicar mi negocio <Icon name="arrow-right" size={15} /></a>
+    </div>
     <div id="sin-resultados" hidden class="text-center py-16 bg-white rounded-3xl border border-ink-100">
       <p class="text-4xl mb-3" aria-hidden="true">🔍</p>
       <h2 class="font-display font-bold text-xl">Sin resultados</h2>
@@ -79,6 +92,7 @@ const categories = await listCategories();
       const select = document.getElementById('cat') as HTMLSelectElement | null;
       const grid = document.getElementById('resultados');
       const empty = document.getElementById('sin-resultados');
+      const slots = document.getElementById('slots-directorio');
       const conteo = document.getElementById('conteo');
       const quickLinks = Array.from(document.querySelectorAll('[data-cat-link]')) as HTMLAnchorElement[];
       interface IndexEntry { slug: string; category: string; haystack: string }
@@ -112,6 +126,8 @@ const categories = await listCategories();
         if (conteo) conteo.textContent = String(visible);
         if (empty) empty.hidden = visible !== 0;
         if (grid) grid.style.display = visible === 0 ? 'none' : '';
+        // Los slots publicitarios solo existen sin filtros (búsqueda honesta)
+        if (slots) slots.hidden = !((cat || 'todas') === 'todas' && !(qRaw ?? '').trim());
         quickLinks.forEach((a) => {
           const on = a.getAttribute('data-cat-link') === (cat || 'todas');
           a.classList.remove(...ACTIVE, ...IDLE);

@@ -1,0 +1,58 @@
+---
+import Icon from '@/components/Icon.astro';
+
+// Slot "Publicitá aquí": ocupa los lugares sin cliente con una invitación a publicar.
+// Nunca finge ser un negocio: borde punteado + CTA explícito.
+interface Props {
+  variante?: 'default' | 'oro';
+  titulo?: string;
+  texto?: string;
+  plan?: '' | 'bronce' | 'plata' | 'oro';
+}
+
+const {
+  variante = 'default',
+  titulo = 'Tu negocio acá',
+  texto = 'Sé el primero de tu rubro en el directorio.',
+  plan = '',
+} = Astro.props;
+
+const href = plan ? `/publicar?plan=${plan}` : '/publicar';
+const esOro = variante === 'oro';
+---
+
+<article
+  data-slot-publicitario
+  class:list={[
+    'flex flex-col items-center justify-center text-center rounded-2xl border-2 border-dashed p-6 min-h-64',
+    esOro
+      ? 'border-amber-400/70 bg-gradient-to-b from-amber-50 to-white'
+      : 'border-ink-200 bg-ink-50/60',
+  ]}>
+  {esOro && (
+    <span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-gradient-to-r from-amber-400 to-yellow-500 text-ink-950 mb-3">
+      ESPACIO ORO
+    </span>
+  )}
+  <span
+    class:list={[
+      'w-12 h-12 rounded-2xl grid place-items-center mb-3',
+      esOro ? 'bg-amber-400/20 text-amber-600' : 'bg-brand-600/10 text-brand-700',
+    ]}>
+    <Icon name="megafono" size={24} />
+  </span>
+  <h3 class="font-display font-bold text-lg">{titulo}</h3>
+  <p class="mt-1 text-sm text-slate-600 max-w-55">{texto}</p>
+  <a
+    href={href}
+    data-event="slot_publicar"
+    class:list={[
+      'mt-4 inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl text-sm font-bold transition active:scale-[0.98]',
+      esOro
+        ? 'bg-ink-950 text-white hover:bg-ink-800'
+        : 'bg-brand-600 text-white hover:bg-brand-700',
+    ]}>
+    Publicar gratis
+  </a>
+  <p class="mt-2 text-xs text-slate-500">Sin tarjeta · 2 minutos</p>
+</article>

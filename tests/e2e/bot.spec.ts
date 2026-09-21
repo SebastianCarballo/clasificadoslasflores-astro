@@ -8,12 +8,11 @@ test.describe('Flor, asistente virtual', () => {
     await expect(page.locator('#asistente-msgs')).toContainText(/Flor/);
   });
 
-  test('responde búsqueda con ficha + WhatsApp', async ({ page }) => {
-    await page.locator('#asistente-input').fill('plomero');
+  test('responde búsqueda con ficha (gratis → ver perfil, sin WA)', async ({ page }) => {
+    await page.locator('#asistente-input').fill('gratis');
     await page.locator('#asistente-form button[type="submit"]').click();
-    await expect(page.locator('#asistente-msgs')).toContainText(/Plomería Juan Pérez/);
-    const wa = page.locator('#asistente-msgs a[href^="https://wa.me/"]').first();
-    await expect(wa).toBeVisible();
+    await expect(page.locator('#asistente-msgs')).toContainText(/Tu Comercio Acá/);
+    await expect(page.locator('#asistente-msgs').getByRole('link', { name: 'Ver perfil' })).toBeVisible();
   });
 
   test('explica planes con precios y CTA', async ({ page }) => {
@@ -25,8 +24,8 @@ test.describe('Flor, asistente virtual', () => {
   });
 
   test('respuestas rápidas y cierre con Escape', async ({ page }) => {
-    await page.locator('[data-rapido="comida"]').click();
-    await expect(page.locator('#asistente-msgs')).toContainText(/Café Central|Rotisería|Panadería/);
+    await page.locator('[data-rapido="oro"]').click();
+    await expect(page.locator('#asistente-msgs')).toContainText(/Tu Comercio Acá/);
     await page.keyboard.press('Escape');
     await expect(page.locator('#asistente-panel')).toBeHidden();
   });

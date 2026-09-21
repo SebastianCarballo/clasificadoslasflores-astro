@@ -14,8 +14,9 @@ interface Props {
     | 'clock'
     | 'globe'
     | 'mail'
-    | 'arrow-right'
-    | 'arrow-left';
+  | 'arrow-right'
+  | 'arrow-left'
+  | 'megafono';
   size?: number;
   class?: string;
 }
@@ -40,6 +41,7 @@ import {
   Globe,
   Mail,
   MapPin,
+  Megaphone,
   Phone,
   Search,
   Share2,
@@ -56,6 +58,7 @@ const UI_ICONS = {
   mail: Mail,
   'arrow-right': ArrowRight,
   'arrow-left': ArrowLeft,
+  megafono: Megaphone,
 };
 const UiIcon = UI_ICONS[name as keyof typeof UI_ICONS];
 ---

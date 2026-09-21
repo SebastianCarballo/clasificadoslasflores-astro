@@ -23,13 +23,13 @@ export interface Business {
   whatsapp?: string;
   hasWhatsAppButton: boolean;
   hours: string;
-  image: ImageMetadata;
-  gallery: ImageMetadata[];
+  image: ImageMetadata | string;
+  gallery: (ImageMetadata | string)[];
   verified: boolean;
   featured: boolean;
+  /** Modelo de muestra: se rotula como tal y vende el lugar en vez del negocio. */
+  demo?: boolean;
   plan: PlanTier;
-  rating: number;
-  reviewsCount: number;
   tags: string[];
   catalogo?: { nombre: string; precio: string }[];
   latitude?: number;

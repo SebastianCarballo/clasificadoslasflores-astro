@@ -13,7 +13,9 @@ const assetImages = import.meta.glob<{ default: ImageMetadata }>(
   { eager: true },
 );
 
-function img(file: string): ImageMetadata {
+function img(file: string): ImageMetadata | string {
+  // Rutas públicas (/) van directo; archivos se resuelven a metadata local.
+  if (file.startsWith('/')) return file;
   const mod = assetImages[`/src/assets/negocios/${file}`];
   if (!mod) throw new Error(`Falta imagen local en src/assets/negocios: ${file}`);
   return mod.default;
@@ -46,7 +48,7 @@ export async function getRelated(businessSlug: string, limit = 3): Promise<Busin
 const PLAN_ORDER: Record<PlanTier, number> = { oro: 0, plata: 1, bronce: 2, gratis: 3 };
 
 export function rankBusinesses(list: Business[]): Business[] {
-  return [...list].sort((a, b) => PLAN_ORDER[a.plan] - PLAN_ORDER[b.plan] || b.rating - a.rating);
+  return [...list].sort((a, b) => PLAN_ORDER[a.plan] - PLAN_ORDER[b.plan] || a.name.localeCompare(b.name));
 }
 
 export async function searchBusinesses(query: string, category?: string): Promise<Business[]> {

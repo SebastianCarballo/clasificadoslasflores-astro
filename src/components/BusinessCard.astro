@@ -1,6 +1,6 @@
 ---
 import type { Business } from '@/types';
-import { Image } from 'astro:assets';
+import Foto from '@/components/Foto.astro';
 import Icon from '@/components/Icon.astro';
 import { getCategory } from '@/data/categories';
 import { whatsappLink } from '@/utils/site';
@@ -19,66 +19,84 @@ const isOro = b.plan === 'oro';
   data-slug={b.slug}
   data-category={b.category}
   class:list={[
-    'card-hover group bg-white rounded-2xl border overflow-hidden flex flex-col',
-    isOro ? 'oro-card' : 'border-ink-100 shadow-sm hover:shadow-lg',
+    'card-hover group flex flex-col overflow-hidden rounded-2xl border transition-all duration-300',
+    b.demo
+      ? 'border-brand-200 bg-gradient-to-b from-brand-50 via-white to-white shadow-[0_12px_30px_-18px_rgba(21,93,220,0.35)] hover:shadow-[0_18px_40px_-20px_rgba(21,93,220,0.45)]'
+      : isOro
+        ? 'oro-card'
+        : 'border-ink-100 bg-white shadow-sm hover:shadow-lg',
   ]}>
   <a href={`/comercio/${b.slug}`} class="relative block aspect-[16/10] overflow-hidden bg-ink-100" tabindex="-1" aria-hidden="true">
-    <Image
+    <Foto
       src={b.image}
       alt={b.name}
       widths={[400, 800]}
       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
       loading="lazy"
       decoding="async"
-      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+      class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
     />
-    <div class="absolute top-3 left-3 flex gap-1.5">
+    <div class="absolute inset-x-0 top-0 h-18 bg-gradient-to-b from-slate-950/35 to-transparent" aria-hidden="true" />
+    <div class="absolute left-3 top-3 flex flex-wrap gap-1.5">
       {b.plan === 'oro' && (
-        <span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-gradient-to-r from-amber-400 to-yellow-500 text-ink-950 shadow">★ ORO</span>
+        <span class="rounded-full bg-gradient-to-r from-amber-400 to-yellow-500 px-2.5 py-1 text-[11px] font-bold text-ink-950 shadow">★ ORO</span>
       )}
-      {b.verified && (b.plan === 'plata' || b.plan === 'oro') && (
-        <span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-ink-950/85 text-white backdrop-blur">✓ Verificado</span>
+      {b.demo && (
+        <span class="rounded-full bg-brand-600 px-2.5 py-1 text-[11px] font-bold text-white shadow">MUESTRA</span>
+      )}
+      {!b.demo && b.verified && (b.plan === 'plata' || b.plan === 'oro') && (
+        <span class="rounded-full bg-ink-950/85 px-2.5 py-1 text-[11px] font-bold text-white backdrop-blur">✓ Verificado</span>
       )}
     </div>
-    <span class="absolute bottom-3 left-3 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-white/95 text-ink-900">
+    <span class="absolute bottom-3 left-3 rounded-full bg-white/95 px-2.5 py-1 text-[11px] font-semibold text-ink-900 shadow-sm">
       {cat?.icon} {cat?.name}
     </span>
   </a>
 
-  <div class="p-5 flex flex-col flex-1">
-    <div class="flex items-center gap-1 text-sm" aria-label={`Calificación ${b.rating} de 5`}>
-      <span class="text-amber-500" aria-hidden="true">★</span>
-      <strong>{b.rating.toFixed(1)}</strong>
-      <span class="text-slate-500">({b.reviewsCount})</span>
-    </div>
-    <a href={`/comercio/${b.slug}`} class="mt-1.5 font-display font-bold text-lg leading-snug hover:text-brand-700">
+  <div class="flex flex-1 flex-col p-5">
+    {b.demo && (
+      <div class="mb-2 inline-flex w-fit items-center gap-1.5 rounded-full border border-brand-200 bg-brand-100 px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-[0.18em] text-brand-800">
+        <span aria-hidden="true">✦</span>
+        Modelo de muestra
+      </div>
+    )}
+
+    <a href={`/comercio/${b.slug}`} class="mt-1 font-display text-lg font-bold leading-snug text-ink-900 hover:text-brand-700">
       {b.name}
     </a>
     <p class="mt-1 text-sm text-slate-600 line-clamp-2">{b.shortDescription}</p>
     <p class="mt-2 text-xs text-slate-500"><span aria-hidden="true">📍</span> {b.address}</p>
 
-    <div class="mt-4 pt-4 border-t border-ink-100 flex gap-2 mt-auto">
-      {/* Botón WhatsApp: solo planes pagos con número configurado (Gratis: ver perfil) */}
-      {b.hasWhatsAppButton && b.whatsapp && b.plan !== 'gratis' ? (
+    <div class="mt-4 flex gap-2 border-t border-ink-100 pt-4 mt-auto">
+      {/* Demo: vende el lugar según su plan (gratis → empezar, pagos → ese plan) */}
+      {b.demo ? (
+        <a
+          href={b.plan === 'oro' ? '/publicar?plan=oro' : '/publicar'}
+          data-event="slot_publicar"
+          data-props={JSON.stringify({ slug: b.slug, origen: 'card-demo' })}
+          class="flex-1 rounded-xl bg-brand-600 px-3 py-2.5 text-center text-sm font-bold text-white transition hover:bg-brand-700 active:scale-[0.98] btn-sheen">
+          {b.plan === 'oro' ? 'Quiero este lugar' : 'Empezar gratis'}
+        </a>
+      ) : b.hasWhatsAppButton && b.whatsapp && b.plan !== 'gratis' ? (
         <a
           href={whatsappLink(b.whatsapp, b.name)}
           target="_blank"
           rel="noopener noreferrer"
           data-event="whatsapp_click"
           data-props={JSON.stringify({ slug: b.slug, plan: b.plan, origen: 'card' })}
-          class="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl bg-[#25D366] text-white text-sm font-semibold hover:brightness-95 active:scale-[0.98] transition btn-sheen">
-          <Icon name="whatsapp" size={17} /> WhatsApp
+          class="flex-1 rounded-xl bg-[#25D366] px-3 py-2.5 text-center text-sm font-semibold text-white transition hover:brightness-95 active:scale-[0.98] btn-sheen">
+          <span class="inline-flex items-center justify-center gap-1.5"><Icon name="whatsapp" size={17} /> WhatsApp</span>
         </a>
       ) : (
         <a
           href={`/comercio/${b.slug}`}
-          class="flex-1 inline-flex items-center justify-center px-3 py-2.5 rounded-xl bg-ink-100 text-ink-900 text-sm font-semibold hover:bg-ink-200 transition">
+          class="flex-1 rounded-xl bg-ink-100 px-3 py-2.5 text-center text-sm font-semibold text-ink-900 transition hover:bg-ink-200">
           Ver perfil
         </a>
       )}
       <a
         href={`/comercio/${b.slug}`}
-        class="min-w-11 min-h-11 px-3 py-2.5 rounded-xl border border-ink-200 text-sm font-semibold hover:bg-ink-50 hover:border-ink-900 transition inline-flex items-center justify-center slide-arrow"
+        class="inline-flex min-h-11 min-w-11 items-center justify-center rounded-xl border border-ink-200 px-3 py-2.5 text-sm font-semibold transition hover:border-ink-900 hover:bg-ink-50 slide-arrow"
         aria-label={`Ver ficha de ${b.name}`}>
         <Icon name="arrow-right" size={16} />
       </a>

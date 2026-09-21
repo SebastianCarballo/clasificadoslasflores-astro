@@ -55,8 +55,6 @@ export function localBusinessSchema(b: {
   address: string;
   phone: string;
   image: ImageMetadata | string;
-  rating: number;
-  reviewsCount: number;
   latitude?: number;
   longitude?: number;
 }) {
@@ -98,11 +96,6 @@ export function localBusinessSchema(b: {
           longitude: b.longitude,
         },
       }),
-    aggregateRating: {
-      '@type': 'AggregateRating',
-      ratingValue: b.rating,
-      reviewCount: b.reviewsCount,
-    },
   };
 }
 

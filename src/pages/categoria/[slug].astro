@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import BusinessCard from '@/components/BusinessCard.astro';
+import SlotPublicitario from '@/components/SlotPublicitario.astro';
 import { listCategories, getCategory } from '@/data/categories';
 import { listBusinesses } from '@/data/businesses';
 
@@ -54,6 +55,7 @@ const schema = {
     ) : (
       <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
         {results.map((b) => <BusinessCard business={b} />)}
+        <SlotPublicitario titulo={`Sé el primero en ${category.name}`} texto="Tu competencia todavía no está acá. Aprovechá." />
       </div>
     )}
   </section>

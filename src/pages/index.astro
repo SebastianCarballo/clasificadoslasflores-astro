@@ -3,6 +3,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import SectionHeading from '@/components/SectionHeading.astro';
 import CategoryGrid from '@/components/CategoryGrid.astro';
 import BusinessCard from '@/components/BusinessCard.astro';
+import SlotPublicitario from '@/components/SlotPublicitario.astro';
 import PlanCard from '@/components/PlanCard.astro';
 import Icon from '@/components/Icon.astro';
 import { listBusinesses } from '@/data/businesses';
@@ -18,9 +19,9 @@ const destacados = businesses.filter((b) => b.plan === 'oro' || b.featured).slic
 const recientes = [...businesses].sort((a, b) => b.createdAt.localeCompare(a.createdAt)).slice(0, 6);
 
 // Prueba social real, calculada en build desde las collections (sin inventar nada)
-const totalResenas = businesses.reduce((acc, b) => acc + b.reviewsCount, 0);
-const ratingPromedio = (businesses.reduce((acc, b) => acc + b.rating, 0) / businesses.length).toFixed(1);
-const pctVerificados = Math.round((businesses.filter((b) => b.verified).length / businesses.length) * 100);
+const pctVerificados = businesses.length
+  ? Math.round((businesses.filter((b) => b.verified).length / businesses.length) * 100)
+  : 0;
 
 const schema = [
   {
@@ -122,30 +123,32 @@ const schema = [
           }
         </div>
       </div>
-
-      {/* Stats — números reales, sin multiplicadores */}
-      <dl class="mt-12 grid grid-cols-3 max-w-xl gap-4 text-center sm:text-left">
-        <div><dt class="text-xs uppercase tracking-wider text-slate-400">Negocios</dt><dd class="font-display font-extrabold text-2xl">{businesses.length}</dd></div>
-        <div><dt class="text-xs uppercase tracking-wider text-slate-400">Categorías</dt><dd class="font-display font-extrabold text-2xl">{categories.length}</dd></div>
-        <div><dt class="text-xs uppercase tracking-wider text-slate-400">Reseñas</dt><dd class="font-display font-extrabold text-2xl">{totalResenas}</dd></div>
-      </dl>
     </div>
   </section>
 
-  {/* PRUEBA SOCIAL — datos reales del directorio */}
-  <section class="max-w-7xl mx-auto px-4 sm:px-6 pt-10" aria-label="Confianza de la comunidad">
+  {/* PRUEBA SOCIAL — la única banda de números, 100% datos reales */}
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 pt-12" aria-label="Confianza de la comunidad">
     <dl class="grid grid-cols-3 gap-3 sm:gap-4 max-w-3xl mx-auto text-center">
       <div class="bg-white rounded-2xl border border-ink-100 px-3 py-4 shadow-sm">
-        <dd class="font-display font-extrabold text-2xl text-ink-900">★ {ratingPromedio}</dd>
-        <dt class="text-xs text-slate-500 mt-1">promedio en {totalResenas} reseñas</dt>
-      </div>
-      <div class="bg-white rounded-2xl border border-ink-100 px-3 py-4 shadow-sm">
-        <dd class="font-display font-extrabold text-2xl text-ink-900">{pctVerificados}%</dd>
-        <dt class="text-xs text-slate-500 mt-1">perfiles verificados</dt>
-      </div>
-      <div class="bg-white rounded-2xl border border-ink-100 px-3 py-4 shadow-sm">
         <dd class="font-display font-extrabold text-2xl text-ink-900">{businesses.length}</dd>
-        <dt class="text-xs text-slate-500 mt-1">negocios publicados</dt>
+        <dt class="text-xs text-slate-500 mt-1">{businesses.length === 1 ? 'negocio publicado' : 'negocios publicados'}</dt>
+      </div>
+      <div class="bg-white rounded-2xl border border-ink-100 px-3 py-4 shadow-sm">
+        <dd class="font-display font-extrabold text-2xl text-ink-900">{categories.length}</dd>
+        <dt class="text-xs text-slate-500 mt-1">categorías</dt>
+      </div>
+      <div class="bg-white rounded-2xl border border-ink-100 px-3 py-4 shadow-sm">
+        {pctVerificados > 0 ? (
+          <>
+            <dd class="font-display font-extrabold text-2xl text-ink-900">{pctVerificados}%</dd>
+            <dt class="text-xs text-slate-500 mt-1">perfiles verificados</dt>
+          </>
+        ) : (
+          <>
+            <dd class="font-display font-extrabold text-2xl text-ink-900">Desde $0</dd>
+            <dt class="text-xs text-slate-500 mt-1">empezar es gratis</dt>
+          </>
+        )}
       </div>
     </dl>
   </section>
@@ -171,17 +174,21 @@ const schema = [
     </div>
     <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5" data-reveal-group>
       {destacados.map((b) => <BusinessCard business={b} />)}
+      <SlotPublicitario variante="oro" plan="oro" titulo="Tu marca acá" texto="Espacio Oro: home, borde dorado y difusión en redes." />
+      <SlotPublicitario variante="oro" plan="oro" titulo="Tu marca acá" texto="El segundo destacado semanal sigue libre." />
     </div>
   </section>
 
-  {/* BANNER PUBLICITARIO */}
-  <section class="max-w-7xl mx-auto px-4 sm:px-6 pt-14" aria-label="Publicidad local">
-    <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-emerald-700 to-teal-800 text-white p-8 sm:p-12">
-      <div class="max-w-xl">
-        <p class="text-xs font-bold uppercase tracking-[0.18em] text-white">Fiesta local · Espacio sponsor</p>
-        <h2 class="mt-2 font-display font-extrabold text-2xl sm:text-4xl">Tu evento o marca acá: banner rotativo</h2>
-        <p class="mt-3 text-emerald-50">Llegá a los vecinos cada semana. Contratá tu destacado de 7 o 15 días.</p>
-        <a href="/contacto" class="mt-5 inline-flex px-5 py-3 rounded-xl bg-white text-emerald-700 font-bold text-sm hover:bg-emerald-50">Quiero publicitar →</a>
+  {/* BANNER PUBLICITARIO — mismo sistema oscuro (era verde y rompía la paleta) */}
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 pt-16" aria-label="Publicidad local">
+    <div class="relative overflow-hidden rounded-[2rem] bg-ink-950 text-white p-8 sm:p-12">
+      <div class="absolute inset-0 dot-grid" aria-hidden="true" />
+      <div class="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-amber-500/15 blur-3xl float-soft" aria-hidden="true" />
+      <div class="relative max-w-xl" data-reveal>
+        <p class="text-xs font-bold uppercase tracking-[0.18em] text-amber-300">Espacio sponsor · Tu marca acá</p>
+        <h2 class="mt-2 font-display font-extrabold text-2xl sm:text-4xl tracking-tight text-balance">Llegá a los vecinos cada semana</h2>
+        <p class="mt-3 text-slate-300">Banner rotativo y destacados de 7 o 15 días para eventos, instituciones y marcas de la zona.</p>
+        <a href="/contacto" data-event="cta_publicidad" class="mt-5 inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-amber-400 to-yellow-500 text-ink-950 font-bold text-sm hover:brightness-105 active:scale-[0.98] transition btn-sheen slide-arrow">Quiero publicitar <Icon name="arrow-right" size={15} /></a>
       </div>
     </div>
   </section>
@@ -191,6 +198,8 @@ const schema = [
     <SectionHeading eyebrow="Novedades" title="Últimos agregados" description="Los perfiles más nuevos de la comunidad." />
     <div class="mt-8 grid sm:grid-cols-2 lg:grid-cols-3 gap-5" data-reveal-group>
       {recientes.map((b) => <BusinessCard business={b} />)}
+      <SlotPublicitario titulo="Tu negocio acá" texto="Publicá gratis y aparecé junto a los destacados." />
+      <SlotPublicitario titulo="Tu negocio acá" texto="Sin tarjeta, en 2 minutos, directo a tu WhatsApp." />
     </div>
     <div class="text-center mt-8">
       <a href="/directorio" class="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-700 hover:underline slide-arrow">Ver todo el directorio <Icon name="arrow-right" size={15} /></a>

@@ -30,7 +30,7 @@ const norm = (s) =>
 
 const PLAN_ORDER = { oro: 0, plata: 1, bronce: 2, gratis: 3 };
 const rank = (list) =>
-  [...list].sort((a, b) => PLAN_ORDER[a.plan] - PLAN_ORDER[b.plan] || b.rating - a.rating);
+  [...list].sort((a, b) => PLAN_ORDER[a.plan] - PLAN_ORDER[b.plan] || String(a.name).localeCompare(String(b.name)));
 
 const server = new McpServer({
   name: 'clasificados-las-flores',
@@ -42,7 +42,7 @@ server.registerTool(
   {
     title: 'Buscar negocios en el directorio',
     description:
-      'Busca comercios, oficios y servicios de Las Flores por texto libre y/o categoría. Devuelve ordenados por plan (Oro primero) y rating.',
+      'Busca comercios, oficios y servicios de Las Flores por texto libre y/o categoría. Devuelve ordenados por plan (Oro primero).',
     inputSchema: {
       consulta: z.string().describe('Texto libre: ej "plomero", "pizza", "alquiler"').optional(),
       categoria: z
@@ -72,8 +72,6 @@ server.registerTool(
           horarios: b.hours,
           plan: b.plan,
           verificado: b.verified,
-          rating: b.rating,
-          resenas: b.reviewsCount,
           whatsapp: b.hasWhatsAppButton ? b.whatsapp ?? null : null,
           ficha: `https://clasificadoslasflores.com.ar/comercio/${b.slug}`,
         })),
@@ -87,7 +85,7 @@ server.registerTool(
   {
     title: 'Ver ficha completa de un negocio',
     description: 'Devuelve todos los datos de un negocio por su slug.',
-    inputSchema: { slug: z.string().describe('Slug del negocio, ej "plomero-juan-perez"') },
+    inputSchema: { slug: z.string().describe('Slug del negocio, ej "ficha-gratis-muestra"') },
   },
   async ({ slug }) => {
     const all = await loadCollection('businesses');

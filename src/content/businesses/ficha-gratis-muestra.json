@@ -1,0 +1,18 @@
+{
+  "name": "Tu Comercio Acá",
+  "category": "comercios",
+  "description": "Esto no es un comercio real: es una muestra de ficha Gratis ($0). Incluye 1 foto, datos esenciales y horarios para validar tu presencia digital sin pagar nada. Cuando quieras botón directo a WhatsApp, más fotos y posición prioritaria, pasate a Bronce.",
+  "shortDescription": "Modelo de muestra: así se ve una ficha Gratis.",
+  "address": "Las Flores, Buenos Aires",
+  "phone": "5492224000000",
+  "hasWhatsAppButton": false,
+  "hours": "Lun a Sáb 9–18hs",
+  "image": "/anuncio-gratis.svg",
+  "gallery": ["/anuncio-gratis.svg"],
+  "verified": false,
+  "featured": false,
+  "demo": true,
+  "plan": "gratis",
+  "tags": ["muestra", "gratis", "modelo"],
+  "createdAt": "2026-08-30"
+}

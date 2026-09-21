@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 // Accesibilidad estructural en las 3 páginas clave
-for (const ruta of ['/', '/directorio', '/comercio/parrilla-lo-de-beto/']) {
+for (const ruta of ['/', '/directorio', '/comercio/ficha-gratis-muestra/']) {
   test(`a11y base en ${ruta}: h1 único, alts, lang y skip-link`, async ({ page }) => {
     await page.goto(ruta);
     await expect(page.locator('h1')).toHaveCount(1);

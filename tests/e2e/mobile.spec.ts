@@ -10,8 +10,8 @@ test.describe('móvil 390px', () => {
     expect(overflowHome).toBeLessThanOrEqual(1);
     await expect(page.getByRole('heading', { name: /Todo Las Flores/ })).toBeVisible();
 
-    await page.goto('/comercio/rotiseria-el-buen-sabor/');
-    await expect(page.getByRole('link', { name: /Consultar por WhatsApp/ }).last()).toBeVisible();
+    await page.goto('/comercio/ficha-gratis-muestra/');
+    await expect(page.getByRole('link', { name: /Empezar gratis con la mía/ }).last()).toBeVisible();
     const overflowFicha = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
     expect(overflowFicha).toBeLessThanOrEqual(1);
   });
@@ -22,7 +22,7 @@ test.describe('móvil 390px', () => {
     await expect(page.getByRole('link', { name: 'Directorio' }).first()).toBeVisible();
 
     await page.goto('/directorio');
-    await page.locator('#q').fill('farmacia');
+    await page.locator('#q').fill('gratis');
     await expect(page.locator('#conteo')).toContainText('1');
   });
 });
