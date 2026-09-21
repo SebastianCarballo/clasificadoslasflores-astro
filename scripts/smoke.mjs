@@ -75,6 +75,7 @@ try {
   check('bot-index.json con negocios', botIdx.status === 200 && botIdx.text.includes('ficha-gratis-muestra') && botIdx.text.includes('catalogo') === false);
   check('home microcopy anti-riesgo', home.text.includes('Sin tarjeta'));
   check('home copy honesto', home.text.includes('Comercios destacados') && !home.text.includes('de la semana'));
+  check('home socios + carrusel', home.text.includes('Socios estrat') && home.text.includes('MembyStudio') && home.text.includes('marquee-track'));
   check('home cómo funciona rediseñado', home.text.includes('De la búsqueda al WhatsApp') && home.text.includes('steps-line'));
   check('home Organization NAP', home.text.includes('"Organization"') && home.text.includes('areaServed'));
   check('home geo-metas', home.text.includes('geo.region') && home.text.includes('AR-B'));

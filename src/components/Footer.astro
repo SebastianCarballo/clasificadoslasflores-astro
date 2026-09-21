@@ -1,9 +1,10 @@
 ---
 import { listCategories } from '@/data/categories';
 import Icon from '@/components/Icon.astro';
+import { STUDIO } from '@/utils/site';
 
-// URL del estudio creador — actualizar si cambia el dominio oficial.
-const STUDIO_URL = 'https://membystudio.com';
+// URL del estudio creador — fuente única en utils/site.ts (STUDIO.url).
+const STUDIO_URL = STUDIO.url;
 
 const categories = await listCategories();
 ---

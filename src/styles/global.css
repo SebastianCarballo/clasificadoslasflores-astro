@@ -322,6 +322,20 @@ body {
   transform: scaleX(1);
 }
 
+/* Carrusel automático de socios: loop infinito CSS, pausa en hover/foco */
+@keyframes marquee-x {
+  to {
+    transform: translateX(-50%);
+  }
+}
+.marquee-track {
+  animation: marquee-x 26s linear infinite;
+}
+.marquee:hover .marquee-track,
+.marquee:focus-within .marquee-track {
+  animation-play-state: paused;
+}
+
 /* Header con sombra al scrollear */
 #site-header {
   transition: box-shadow 0.3s ease;
@@ -337,6 +351,11 @@ body {
   .card-hover,
   .card-hover:hover {
     transform: none;
+  }
+  .marquee-track,
+  .float-soft,
+  .float-soft-delayed {
+    animation: none;
   }
   *,
   *::before,

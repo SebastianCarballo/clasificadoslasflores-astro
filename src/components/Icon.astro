@@ -16,7 +16,8 @@ interface Props {
     | 'mail'
   | 'arrow-right'
   | 'arrow-left'
-  | 'megafono';
+  | 'megafono'
+  | 'send';
   size?: number;
   class?: string;
 }
@@ -44,6 +45,7 @@ import {
   Megaphone,
   Phone,
   Search,
+  Send,
   Share2,
 } from '@lucide/astro';
 
@@ -51,6 +53,7 @@ const UI_ICONS = {
   phone: Phone,
   share: Share2,
   search: Search,
+  send: Send,
   check: Check,
   pin: MapPin,
   clock: Clock,

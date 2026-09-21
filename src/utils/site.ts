@@ -39,6 +39,15 @@ export const SITE = {
   defaultImage: '/og-cover.svg',
 };
 
+// Socio estratégico: agencia de marketing digital que trabaja a la par.
+// Fuente única para footer, sección de socios y schemas.
+export const STUDIO = {
+  name: 'MembyStudio',
+  tagline: 'Agencia de Marketing Digital',
+  url: 'https://membystudio.com',
+  rol: 'Socio estratégico: diseño, posicionamiento y difusión del portal.',
+};
+
 export function normalizeText(value: string): string {
   return value
     .toLowerCase()
