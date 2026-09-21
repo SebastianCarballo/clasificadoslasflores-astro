@@ -47,81 +47,87 @@ const schema = [
 >
   {/* HERO */}
   <section class="relative overflow-hidden bg-ink-950 text-white">
-    <div
-      class="absolute inset-0 bg-gradient-to-br from-brand-700 via-indigo-700 to-ink-950"
-      aria-hidden="true"
-    />
-    <div class="absolute -inset-[10%] aurora-layer" aria-hidden="true" />
-    <div class="absolute inset-0 dot-grid dot-grid-animated" aria-hidden="true" />
-    <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[130%] aspect-square" aria-hidden="true">
-      <div class="w-full h-full beam-conic"></div>
-    </div>
-    <div class="absolute inset-x-0 top-[58%] h-32 hero-horizon" aria-hidden="true"></div>
-    <div
-      class="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-brand-500/30 blur-3xl float-soft"
-      aria-hidden="true"
-    />
-    <div
-      class="absolute -bottom-32 -left-24 w-80 h-80 rounded-full bg-amber-500/15 blur-3xl float-soft-delayed"
-      aria-hidden="true"
-    />
-    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
-      <div class="max-w-3xl" data-reveal>
-        <p
-          class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 border border-white/15 text-xs font-semibold mb-5">
-          <span class="relative flex w-2 h-2" aria-hidden="true">
-            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-400"></span>
-          </span>
-          📍 Las Flores · Buenos Aires · Directorio verificado
-        </p>
-        <h1 class="font-display font-extrabold text-4xl sm:text-6xl leading-[1.05] tracking-tight text-balance">
-          Todo Las Flores,<br />
-          <span class="shine-text text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-yellow-100 to-orange-400">
-            en un solo lugar.
-          </span>
-        </h1>
-        <p class="mt-5 text-lg text-slate-300 max-w-xl leading-relaxed">
-          Del plomero de urgencias a la carta de tu restaurante favorito. Buscá, compará y
-          contactá por WhatsApp en segundos.
-        </p>
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_75%_20%,rgba(51,143,250,0.28),transparent_32%),linear-gradient(120deg,#020617_0%,#0b2355_54%,#155ddc_140%)]" aria-hidden="true" />
+    <div class="absolute inset-0 dot-grid dot-grid-animated opacity-70" aria-hidden="true" />
+    <div class="absolute -right-40 top-20 h-[34rem] w-[34rem] rounded-full border border-white/10 rotate-12" aria-hidden="true" />
+    <div class="absolute -right-24 top-44 h-[26rem] w-[26rem] rounded-full border border-amber-300/20 -rotate-12" aria-hidden="true" />
 
-        {/* Buscador (progresivo: funciona sin JS vía GET) */}
-        <form
-          action="/directorio"
-          method="get"
-          role="search"
-          data-event="buscar"
-          class="mt-8 bg-white rounded-2xl p-2 flex flex-col sm:flex-row gap-2 shadow-2xl max-w-2xl">
-          <label class="sr-only" for="q">Buscar comercios o servicios</label>
-          <input
-            id="q"
-            name="q"
-            type="search"
-            inputmode="search"
-            enterkeyhint="search"
-            placeholder="¿Qué buscás? Ej: plomero, pizza, alquiler…"
-            autocomplete="off"
-            class="flex-1 px-4 py-3 rounded-xl text-ink-900 outline-none placeholder:text-slate-400"
-          />
-          <button
-            type="submit"
-            class="px-6 py-3 rounded-xl bg-brand-600 font-bold text-white hover:bg-brand-700 active:scale-[0.98] transition inline-flex items-center gap-2 btn-sheen">
-            <Icon name="search" size={17} /> Buscar
-          </button>
-        </form>
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-20 lg:py-24">
+      <div class="grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(25rem,0.82fr)] lg:gap-16">
+        <div data-reveal>
+          <p class="inline-flex items-center gap-2 rounded-full border border-emerald-300/25 bg-emerald-300/10 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.14em] text-emerald-200">
+            <span class="relative flex h-2 w-2" aria-hidden="true">
+              <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-300 opacity-75"></span>
+              <span class="relative inline-flex h-2 w-2 rounded-full bg-emerald-300"></span>
+            </span>
+            Las Flores está activa
+          </p>
+          <h1 class="mt-5 max-w-3xl font-display text-4xl font-extrabold leading-[1.02] tracking-tight text-balance sm:text-6xl lg:text-[4.5rem]">
+            Lo que necesitás,
+            <span class="mt-1 block text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-yellow-100 to-orange-400">más cerca.</span>
+          </h1>
+          <p class="mt-6 max-w-xl text-lg leading-relaxed text-slate-300 sm:text-xl">
+            Comercios, oficios y servicios de tu ciudad. Encontrá a quién llamar, compará opciones y resolvé en minutos.
+          </p>
 
-        <div class="mt-4 flex flex-wrap gap-2 text-sm">
-          <span class="text-slate-400 py-1.5">Populares:</span>
-          {
-            ['Plomero', 'Pizza', 'Alquiler', 'Café'].map((t) => (
-              <a
-                href={`/directorio?q=${encodeURIComponent(t)}`}
-                class="px-4 py-2 rounded-full bg-white/10 border border-white/15 hover:bg-white/20 transition-colors">
-                {t}
-              </a>
-            ))
-          }
+          {/* Buscador (progresivo: funciona sin JS vía GET) */}
+          <form action="/directorio" method="get" role="search" data-event="buscar" class="mt-8 max-w-2xl rounded-2xl border border-white/20 bg-white p-2 shadow-[0_24px_80px_rgba(2,6,23,0.45)] sm:flex sm:items-center">
+            <label class="sr-only" for="q">Buscar comercios o servicios</label>
+            <div class="flex min-w-0 flex-1 items-center gap-3 px-3">
+              <Icon name="search" size={19} class="shrink-0 text-brand-600" />
+              <input id="q" name="q" type="search" inputmode="search" enterkeyhint="search" placeholder="Buscá un rubro, comercio o servicio…" autocomplete="off" class="min-w-0 flex-1 py-3 text-ink-900 outline-none placeholder:text-slate-400" />
+            </div>
+            <button type="submit" class="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-brand-600 px-6 py-3.5 font-bold text-white transition hover:bg-brand-700 active:scale-[0.98] sm:mt-0 sm:w-auto">
+              Buscar ahora <Icon name="arrow-right" size={17} />
+            </button>
+          </form>
+
+          <div class="mt-5 flex flex-wrap items-center gap-2 text-sm">
+            <span class="mr-1 text-slate-400">Probá con:</span>
+            {['Plomero', 'Pizza', 'Alquiler', 'Café'].map((t) => (
+              <a href={`/directorio?q=${encodeURIComponent(t)}`} class="rounded-full border border-white/15 bg-white/10 px-3.5 py-2 font-medium text-slate-100 transition hover:border-white/30 hover:bg-white/20">{t}</a>
+            ))}
+          </div>
+        </div>
+
+        <div class="relative mx-auto w-full max-w-[31rem] lg:mx-0" data-reveal>
+          <div class="absolute -inset-5 rounded-[2.5rem] bg-brand-400/15 blur-3xl" aria-hidden="true" />
+          <div class="relative overflow-hidden rounded-[2rem] border border-white/20 bg-white/[0.08] p-3 shadow-2xl backdrop-blur-xl">
+            <div class="relative min-h-[25rem] overflow-hidden rounded-[1.5rem] bg-[#dcecff] p-4 text-ink-900 sm:min-h-[29rem]">
+              <div class="absolute inset-0 opacity-60" aria-hidden="true">
+                <div class="absolute left-[12%] top-[18%] h-px w-[84%] rotate-[18deg] bg-brand-600/25" />
+                <div class="absolute left-[-5%] top-[52%] h-px w-[115%] -rotate-[26deg] bg-brand-600/20" />
+                <div class="absolute left-[43%] top-[-5%] h-[115%] w-px rotate-[24deg] bg-brand-600/20" />
+                <div class="absolute left-[70%] top-[-10%] h-[120%] w-px -rotate-[35deg] bg-brand-600/15" />
+                <div class="absolute inset-0 bg-[radial-gradient(circle_at_25%_30%,rgba(255,255,255,0.9)_0_3px,transparent_4px),radial-gradient(circle_at_75%_65%,rgba(21,93,220,0.22)_0_2px,transparent_3px)] bg-[length:42px_42px,31px_31px]" />
+              </div>
+              <div class="relative flex items-center justify-between">
+                <span class="rounded-full bg-white/80 px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.15em] text-brand-700 shadow-sm">Mapa local</span>
+                <span class="inline-flex items-center gap-1.5 rounded-full bg-ink-950 px-3 py-1.5 text-[11px] font-bold text-white"><span class="h-1.5 w-1.5 rounded-full bg-emerald-400" /> En vivo</span>
+              </div>
+              <div class="absolute left-[19%] top-[31%] grid h-9 w-9 place-items-center rounded-full border-4 border-white bg-brand-600 text-white shadow-lg shadow-brand-900/30"><Icon name="pin" size={16} /></div>
+              <div class="absolute right-[18%] top-[22%] grid h-8 w-8 place-items-center rounded-full border-4 border-white bg-amber-400 text-sm font-bold text-ink-950 shadow-lg" aria-label="Negocio destacado">★</div>
+              <div class="absolute right-[25%] bottom-[28%] grid h-9 w-9 place-items-center rounded-full border-4 border-white bg-emerald-500 text-white shadow-lg"><Icon name="whatsapp" size={15} /></div>
+              <div class="absolute bottom-4 left-4 right-4 rounded-2xl border border-white/80 bg-white/90 p-4 shadow-xl backdrop-blur">
+                <div class="flex items-start justify-between gap-3">
+                  <div>
+                    <p class="text-[10px] font-bold uppercase tracking-[0.16em] text-brand-600">Recomendado cerca tuyo</p>
+                    <h2 class="mt-1 font-display text-lg font-bold leading-tight">{destacados[0]?.name ?? 'Tu próximo contacto'}</h2>
+                    <p class="mt-1 text-xs text-slate-500">{destacados[0]?.shortDescription ?? 'Negocios y servicios locales verificados'}</p>
+                  </div>
+                  <span class="rounded-lg bg-amber-100 px-2 py-1 text-xs font-bold text-amber-700">★ Destacado</span>
+                </div>
+                <div class="mt-3 flex items-center justify-between border-t border-ink-100 pt-3 text-xs font-semibold text-slate-600">
+                  <span>Las Flores · Buenos Aires</span>
+                  <span class="text-emerald-600">Disponible hoy</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="absolute -bottom-5 -left-5 hidden rounded-2xl border border-white/20 bg-ink-950/90 px-4 py-3 text-white shadow-xl backdrop-blur sm:block">
+            <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-amber-300">Una ciudad, muchas respuestas</p>
+            <p class="mt-1 font-display text-sm font-bold">{businesses.length} negocios publicados</p>
+          </div>
         </div>
       </div>
     </div>
