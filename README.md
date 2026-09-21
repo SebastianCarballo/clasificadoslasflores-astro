@@ -2,6 +2,10 @@
 
 Directorio local de Las Flores (Buenos Aires). Astro 5 + Tailwind 4 + TypeScript strict.
 
+La app usa salida server con `@astrojs/node` para validar el formulario de contacto en
+`POST /api/contact`. El despliegue debe ejecutar `node ./dist/server/entry.mjs` (o el
+comando equivalente del proveedor); ya no alcanza con servir `dist/` como archivos estáticos.
+
 ## Arquitectura
 
 ```
@@ -17,6 +21,7 @@ src/
   layouts/BaseLayout.astro  # SEO, OG, fonts self-hosted, header/footer
   components/           # Header, Footer, CategoryGrid, BusinessCard (<Image>), PlanCard, SectionHeading
   pages/
+    api/contact.ts        # Validación server-side, honeypot y rate limit del contacto
     index.astro         # Home: hero + buscador, categorías, Oro, recientes, planes
     directorio.astro    # Búsqueda 100% cliente con índice + normalización de acentos
     comercio/[slug].astro   # Ficha SEO con LocalBusiness+geo+BreadcrumbList, mapa OSM, WhatsApp
@@ -49,6 +54,8 @@ public/robots.txt, favicon.svg, og-cover.svg
 - **Accesibilidad:** skip-link, landmarks, labels, `aria-current`, focos visibles, contraste.
 - **Mobile-first + responsive**, cards con jerarquía Oro > Plata > Bronce > Gratis.
 - **CRO WhatsApp:** mensaje prediseñado `wa.me` en cada ficha con plan habilitado.
+- **Contacto:** validación compartida en cliente y servidor, límites de longitud, honeypot,
+  comprobación de origen y rate limit básico antes de abrir WhatsApp.
 - **TypeScript strict** con alias `@/*`.
 - **Imágenes:** vendorizadas en `src/assets/negocios` (fuente HD) + `astro:assets`
   (responsive webp + fallback jpg, metadata tipada, cero CLS). Re-vendorizar:

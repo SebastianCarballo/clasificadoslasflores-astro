@@ -8,6 +8,8 @@ import { listBusinesses, getBusiness, getRelated } from '@/data/businesses';
 import { getCategory } from '@/data/categories';
 import { whatsappLink, localBusinessSchema, breadcrumbSchema, formatPhoneDisplay } from '@/utils/site';
 
+export const prerender = true;
+
 export async function getStaticPaths() {
   const businesses = await listBusinesses();
   return businesses.map((b) => ({ params: { slug: b.slug } }));

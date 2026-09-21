@@ -5,6 +5,8 @@ import SlotPublicitario from '@/components/SlotPublicitario.astro';
 import { listCategories, getCategory } from '@/data/categories';
 import { listBusinesses } from '@/data/businesses';
 
+export const prerender = true;
+
 export async function getStaticPaths() {
   const categories = await listCategories();
   return categories.map((c) => ({ params: { slug: c.slug } }));

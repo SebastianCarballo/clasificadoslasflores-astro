@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Icon from '@/components/Icon.astro';
+import { CONTACT_LIMITS } from '@/utils/contact';
 ---
 
 <BaseLayout
@@ -18,5 +19,78 @@ import Icon from '@/components/Icon.astro';
       <h2 class="font-display font-bold text-lg">Horario de atención</h2>
       <p class="text-sm text-slate-600 mt-1">Lunes a viernes 9–18 hs · Las Flores, Buenos Aires.</p>
     </div>
+    <form id="form-contacto" class="mt-6 bg-white rounded-3xl border border-ink-100 p-6 sm:p-8 space-y-5" novalidate>
+      <div class="grid sm:grid-cols-2 gap-4">
+        <div>
+          <label for="contacto-nombre" class="block text-sm font-semibold mb-1.5">Nombre *</label>
+          <input id="contacto-nombre" name="name" required minlength="2" maxlength={CONTACT_LIMITS.name} autocomplete="name" class="w-full px-4 py-3 rounded-xl border border-ink-200 outline-none focus:ring-2 focus:ring-brand-500" />
+        </div>
+        <div>
+          <label for="contacto-email" class="block text-sm font-semibold mb-1.5">Email *</label>
+          <input id="contacto-email" name="email" type="email" required maxlength={CONTACT_LIMITS.email} autocomplete="email" class="w-full px-4 py-3 rounded-xl border border-ink-200 outline-none focus:ring-2 focus:ring-brand-500" />
+        </div>
+      </div>
+      <div>
+        <label for="contacto-asunto" class="block text-sm font-semibold mb-1.5">Asunto *</label>
+        <input id="contacto-asunto" name="subject" required minlength="3" maxlength={CONTACT_LIMITS.subject} class="w-full px-4 py-3 rounded-xl border border-ink-200 outline-none focus:ring-2 focus:ring-brand-500" />
+      </div>
+      <div>
+        <label for="contacto-mensaje" class="block text-sm font-semibold mb-1.5">Mensaje *</label>
+        <textarea id="contacto-mensaje" name="message" required minlength="10" maxlength={CONTACT_LIMITS.message} rows="5" class="w-full px-4 py-3 rounded-xl border border-ink-200 outline-none focus:ring-2 focus:ring-brand-500"></textarea>
+      </div>
+      <div class="absolute -left-[9999px]" aria-hidden="true">
+        <label for="contacto-website">Website</label>
+        <input id="contacto-website" name="website" tabindex="-1" autocomplete="off" />
+      </div>
+      <p id="contacto-error" role="alert" tabindex="-1" hidden class="text-sm font-semibold text-red-600"></p>
+      <p id="contacto-ok" role="status" hidden class="text-sm font-semibold text-emerald-700">Solicitud validada. Se abrirá WhatsApp para completar el envío.</p>
+      <button type="submit" class="w-full inline-flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-ink-950 text-white font-bold hover:bg-ink-800 active:scale-[0.99] transition">
+        <Icon name="send" size={18} /> Enviar consulta
+      </button>
+      <p class="text-xs text-slate-500 text-center">No guardamos el mensaje en este sitio. Se valida y se envía por WhatsApp.</p>
+    </form>
   </section>
 </BaseLayout>
+
+<script>
+  import { validateContactInput } from '@/utils/contact';
+
+  const form = document.getElementById('form-contacto') as HTMLFormElement | null;
+  const error = document.getElementById('contacto-error');
+  const success = document.getElementById('contacto-ok');
+  const DESTINO = '5492224000000';
+
+  form?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    if (error) error.hidden = true;
+    if (success) success.hidden = true;
+    const payload = Object.fromEntries(new FormData(form).entries());
+    const local = validateContactInput(payload);
+    if (!local.ok) {
+      if (error) {
+        error.textContent = Object.values(local.errors)[0] ?? 'Revisá los datos ingresados.';
+        error.hidden = false;
+        error.focus();
+      }
+      return;
+    }
+
+    const response = await fetch('/api/contact', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    if (!response.ok) {
+      if (error) {
+        error.textContent = response.status === 429 ? 'Demasiados intentos. Esperá unos minutos.' : 'No se pudo validar la consulta. Intentá de nuevo.';
+        error.hidden = false;
+        error.focus();
+      }
+      return;
+    }
+
+    const text = `Hola, soy ${local.data?.name}.\nEmail: ${local.data?.email}\nAsunto: ${local.data?.subject}\n\n${local.data?.message}`;
+    if (success) success.hidden = false;
+    window.open(`https://wa.me/${DESTINO}?text=${encodeURIComponent(text)}`, '_blank', 'noopener,noreferrer');
+  });
+</script>
