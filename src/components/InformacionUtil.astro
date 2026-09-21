@@ -1,0 +1,104 @@
+---
+import Icon from '@/components/Icon.astro';
+import type { Business } from '@/types';
+
+interface Props {
+  businesses: Business[];
+}
+
+const { businesses } = Astro.props;
+const farmacias = businesses.filter((business) => business.category === 'salud');
+const emergencias = [
+  { nombre: 'Policía', numero: '911', tono: 'bg-red-50 text-red-700 border-red-100' },
+  { nombre: 'Bomberos', numero: '100', tono: 'bg-orange-50 text-orange-700 border-orange-100' },
+  { nombre: 'Emergencias médicas', numero: '107', tono: 'bg-rose-50 text-rose-700 border-rose-100' },
+];
+---
+
+<section class="max-w-7xl mx-auto px-4 sm:px-6 pt-16" aria-labelledby="informacion-util">
+  <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+    <div>
+      <p class="text-xs font-bold uppercase tracking-[0.18em] text-brand-600 mb-2">Para todos los días</p>
+      <h2 id="informacion-util" class="font-display font-bold text-3xl tracking-tight text-ink-900">Información útil de Las Flores</h2>
+    </div>
+    <p class="max-w-sm text-sm leading-relaxed text-slate-500 sm:text-right">Lo que necesitás resolver rápido, en un solo lugar.</p>
+  </div>
+
+  <div class="mt-7 grid gap-5 lg:grid-cols-[minmax(0,1fr)_20rem]">
+    <div class="grid gap-5 md:grid-cols-2">
+      <article class="rounded-2xl border border-ink-100 bg-white p-5 shadow-sm">
+        <div class="flex items-start justify-between gap-4">
+          <div class="flex items-center gap-3">
+            <span class="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-emerald-100 text-xl text-emerald-700" aria-hidden="true">✚</span>
+            <div>
+              <h3 class="font-display font-bold text-lg">Farmacias de turno</h3>
+              <p class="text-xs text-slate-500">Guardia de hoy · Las Flores</p>
+            </div>
+          </div>
+          <span class="rounded-full bg-amber-100 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-amber-700">Actualizable</span>
+        </div>
+
+        {farmacias.length > 0 ? (
+          <div class="mt-5 space-y-3">
+            {farmacias.slice(0, 2).map((farmacia) => (
+              <div class="rounded-xl border border-ink-100 bg-ink-50 p-3">
+                <h4 class="font-semibold text-sm">{farmacia.name}</h4>
+                <p class="mt-1 flex items-center gap-1.5 text-xs text-slate-500"><Icon name="pin" size={13} /> {farmacia.address}</p>
+                <a href={`tel:+${farmacia.phone}`} class="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-emerald-600 px-3 py-2 text-xs font-bold text-white transition hover:bg-emerald-700"><Icon name="phone" size={14} /> Llamar</a>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div class="mt-5 rounded-xl border border-dashed border-ink-200 bg-ink-50 p-4">
+            <p class="text-sm font-semibold text-ink-900">Todavía no cargamos el turno de hoy.</p>
+            <p class="mt-1 text-xs leading-relaxed text-slate-500">Estamos preparando este espacio con información confirmada, no estimada.</p>
+            <a href="/contacto?asunto=farmacia-de-turno" class="mt-4 inline-flex items-center gap-1.5 text-xs font-bold text-brand-700 hover:underline">Informar una farmacia <Icon name="arrow-right" size={14} /></a>
+          </div>
+        )}
+      </article>
+
+      <article class="rounded-2xl border border-ink-100 bg-white p-5 shadow-sm">
+        <div class="flex items-center gap-3">
+          <span class="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-red-100 text-lg font-black text-red-700" aria-hidden="true">!</span>
+          <div>
+            <h3 class="font-display font-bold text-lg">Emergencias</h3>
+            <p class="text-xs text-slate-500">Números nacionales</p>
+          </div>
+        </div>
+        <div class="mt-5 space-y-2">
+          {emergencias.map((item) => (
+            <a href={`tel:${item.numero}`} class={`flex items-center justify-between rounded-xl border px-3 py-2.5 transition hover:brightness-95 ${item.tono}`}>
+              <span class="flex items-center gap-2 text-sm font-semibold"><Icon name="phone" size={14} /> {item.nombre}</span>
+              <span class="font-display text-lg font-extrabold">{item.numero}</span>
+            </a>
+          ))}
+        </div>
+        <p class="mt-4 flex items-center gap-1.5 text-[11px] leading-relaxed text-slate-400"><Icon name="clock" size={13} /> Atención permanente. Ante una urgencia, llamá directamente.</p>
+      </article>
+    </div>
+
+    <aside class="space-y-5">
+      <article class="rounded-2xl border border-brand-100 bg-brand-50 p-5">
+        <div class="flex items-center gap-3">
+          <span class="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-white text-xl font-bold text-brand-700 shadow-sm" aria-hidden="true">$</span>
+          <div>
+            <h3 class="font-display font-bold text-lg">Cotización USD</h3>
+            <p class="text-xs text-slate-500">Consultá el valor actualizado</p>
+          </div>
+        </div>
+        <div class="mt-5 space-y-2 rounded-xl bg-white p-3 text-sm">
+          <div class="flex items-center justify-between"><span class="text-slate-600">Dólar oficial</span><span class="font-semibold text-brand-700">Ver valor</span></div>
+          <div class="flex items-center justify-between"><span class="text-slate-600">Dólar blue</span><span class="font-semibold text-brand-700">Ver valor</span></div>
+        </div>
+        <a href="https://www.bna.com.ar/Personas" target="_blank" rel="noopener noreferrer" class="mt-4 inline-flex items-center gap-1.5 text-xs font-bold text-brand-700 hover:underline">Consultar fuente oficial <Icon name="arrow-right" size={14} /></a>
+      </article>
+
+      <article class="rounded-2xl bg-ink-950 p-5 text-white shadow-sm">
+        <p class="text-[10px] font-bold uppercase tracking-[0.16em] text-amber-300">¿Tenés un negocio?</p>
+        <h3 class="mt-2 font-display text-lg font-bold">Aparecé cuando te buscan</h3>
+        <p class="mt-1.5 text-xs leading-relaxed text-slate-300">Publicá gratis tu ficha y empezá a recibir consultas directas.</p>
+        <a href="/publicar" class="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-white px-4 py-2.5 text-sm font-bold text-ink-900 transition hover:bg-brand-50">Publicar gratis <Icon name="arrow-right" size={15} /></a>
+      </article>
+    </aside>
+  </div>
+</section>

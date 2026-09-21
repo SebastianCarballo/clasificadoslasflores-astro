@@ -5,6 +5,7 @@ import CategoryGrid from '@/components/CategoryGrid.astro';
 import BusinessCard from '@/components/BusinessCard.astro';
 import SlotPublicitario from '@/components/SlotPublicitario.astro';
 import Socios from '@/components/Socios.astro';
+import InformacionUtil from '@/components/InformacionUtil.astro';
 import PlanCard from '@/components/PlanCard.astro';
 import Icon from '@/components/Icon.astro';
 import { listBusinesses } from '@/data/businesses';
@@ -169,6 +170,9 @@ const schema = [
     />
     <div class="mt-8" data-reveal><CategoryGrid /></div>
   </section>
+
+  {/* INFORMACIÓN ÚTIL */}
+  <InformacionUtil businesses={businesses} />
 
   {/* DESTACADOS ORO */}
   <section class="max-w-7xl mx-auto px-4 sm:px-6 pt-16">
