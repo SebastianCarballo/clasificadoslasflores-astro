@@ -18,13 +18,14 @@ const {
 } = Astro.props;
 
 const href = plan ? `/publicar?plan=${plan}` : '/publicar';
+const cta = plan === 'oro' ? 'Quiero ser Oro' : plan ? `Elegir ${plan}` : 'Publicar gratis';
 const esOro = variante === 'oro';
 ---
 
 <article
   data-slot-publicitario
   class:list={[
-    'flex flex-col items-center justify-center text-center rounded-2xl border-2 border-dashed p-6 min-h-64',
+    'flex h-full min-h-64 flex-col items-center justify-center text-center rounded-2xl border-2 border-dashed p-6',
     esOro
       ? 'border-amber-400/70 bg-gradient-to-b from-amber-50 to-white'
       : 'border-ink-200 bg-ink-50/60',
@@ -52,7 +53,7 @@ const esOro = variante === 'oro';
         ? 'bg-ink-950 text-white hover:bg-ink-800'
         : 'bg-brand-600 text-white hover:bg-brand-700',
     ]}>
-    Publicar gratis
+    {cta}
   </a>
   <p class="mt-2 text-xs text-slate-500">Sin tarjeta · 2 minutos</p>
 </article>

@@ -183,10 +183,11 @@ const schema = [
       </div>
       <a href="/directorio" class="hidden sm:inline-flex items-center gap-1.5 text-sm font-semibold text-brand-700 hover:underline slide-arrow">Ver directorio <Icon name="arrow-right" size={15} /></a>
     </div>
-    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5" data-reveal-group>
+    <div class="grid items-stretch grid-cols-1 sm:grid-cols-3 gap-5">
       {destacados.map((b) => <BusinessCard business={b} />)}
       <SlotPublicitario variante="oro" plan="oro" titulo="Tu marca acá" texto="Espacio Oro: home, borde dorado y difusión en redes." />
       <SlotPublicitario variante="oro" plan="oro" titulo="Tu marca acá" texto="El segundo destacado semanal sigue libre." />
+      <SlotPublicitario variante="oro" plan="oro" titulo="Tu marca acá" texto="Tercer lugar premium: rotación en home incluida." />
     </div>
   </section>
 
