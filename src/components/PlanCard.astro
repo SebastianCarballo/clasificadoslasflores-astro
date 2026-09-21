@@ -24,7 +24,17 @@ const { plan } = Astro.props;
     </span>
   )}
   <h3 class="font-display font-bold text-xl">{plan.name}</h3>
-  <p class="mt-1 text-2xl font-display font-extrabold text-ink-900">{plan.priceLabel}</p>
+  <div class="mt-2 flex items-center gap-2.5 min-h-[2.75rem]">
+    <span
+      class:list={[
+        'inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold',
+        plan.tier === 'gratis' ? 'bg-amber-100 text-amber-700' : 'bg-brand-100 text-brand-700',
+      ]}
+      aria-hidden="true">
+      ★
+    </span>
+    <p class="text-2xl font-display font-extrabold leading-none text-ink-900">{plan.priceLabel}</p>
+  </div>
   <p class="mt-2 text-sm text-slate-600">{plan.description}</p>
   <ul class="mt-5 space-y-2.5 text-sm flex-1">
     {
@@ -49,7 +59,7 @@ const { plan } = Astro.props;
     data-event="elegir_plan"
     data-props={JSON.stringify({ plan: plan.tier })}
     class:list={[
-      'mt-6 inline-flex justify-center px-4 py-3 rounded-xl text-sm font-bold transition active:scale-[0.98]',
+      'mt-6 flex w-full items-center justify-center px-4 py-3 rounded-xl text-sm font-bold transition active:scale-[0.98]',
       plan.highlighted
         ? 'bg-brand-600 text-white hover:bg-brand-700 shadow-lg shadow-brand-600/25'
         : 'bg-ink-900 text-white hover:bg-ink-800',
